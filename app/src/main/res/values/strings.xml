@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">KidzStarz</string>
+    <string name="kid_error_name">Please enter a name (min 2 chars)</string>
+    <string name="kpz_hint_kidname">Please enter a name (min 2 chars)</string>
+    <string name="kidname_button_save">Save</string>
+    <string name="kidname_button_cancel">Cancel</string>
+    <string name="ksz_add_planz">Add Planz</string>
+    <string name="ksz_hint_planname">Please enter a name (min 2 chars)</string>
+    <string name="ksz_choose_reward">Choose your reward</string>
+    <string name="ksz_hint_planitemname">Please enter a name (min 2 chars)</string>
+    <string name="ksz_add_planItemz">Tasks</string>
+    <string name="ksz_set_plan_mood">How are feeling?</string>
+    <string name="deletekid_confirm_button">Yes!</string>
+    <string name="ksz_delete_kid">Are you sure you want to delete?</string>
+    <string name="deletekid_cancel_button">No</string>
+    <string name="deleteplan_cancel_button">No</string>
+    <string name="deleteplan_confirm_button">Yes!</string>
+    <string name="ksz_delete_plan">Are you sure you want to delete?</string>
+    <string name="plan_adMob_unit_id">ca-app-pub-7065714443867225/3470509679</string>
+    <string name="kid_adMob_unit_id">ca-app-pub-7065714443867225/9880005359</string>
+    <string name="main_adMob_unit_id">ca-app-pub-7065714443867225/8758495379</string>
+
+    <!--<string name="plan_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="kid_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="main_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    -->
 </resources>

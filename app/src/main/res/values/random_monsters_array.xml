@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="kidzMonsters">
+        <item>@drawable/m1</item>
+        <item>@drawable/m2</item>
+        <item>@drawable/m3</item>
+        <item>@drawable/m4</item>
+        <item>@drawable/m5</item>
+        <item>@drawable/m6</item>
+        <item>@drawable/m7</item>
+        <item>@drawable/m8</item>
+        <item>@drawable/m9</item>
+        <item>@drawable/m10</item>
+        <item>@drawable/m11</item>
+    </array>
+
+</resources>
