@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "674147517853",
+    "firebase_url": "https://kidzstarz-504a0.firebaseio.com",
+    "project_id": "kidzstarz-504a0",
+    "storage_bucket": "kidzstarz-504a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674147517853:android:210ad3a4b53ec9cab39b74",
+        "android_client_info": {
+          "package_name": "com.stuartminion.kidzstarz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674147517853-8g7b1vd637jmbure7gq4u8efed8kji8o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stuartminion.kidzstarz",
+            "certificate_hash": "49b09f5dcefe9bdc211315ed27e921c6e3896d9c"
+          }
+        },
+        {
+          "client_id": "674147517853-457ucrm37ek09l7ojldmqtorju2i5duq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAibH6o6XPGlwDnClQeZFXWO-YPzQAIliY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674147517853-457ucrm37ek09l7ojldmqtorju2i5duq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
