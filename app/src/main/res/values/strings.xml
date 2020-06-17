@@ -2,6 +2,7 @@
     <string name="app_name">KidzStarz</string>
     <string name="kid_error_name">Please enter a name (min 2 chars)</string>
     <string name="kpz_hint_kidname">Please enter a name (min 2 chars)</string>
+    <string name="ksz_add_kid">Add Kid</string>
     <string name="kidname_button_save">Save</string>
     <string name="kidname_button_cancel">Cancel</string>
     <string name="ksz_add_planz">Add Planz</string>
