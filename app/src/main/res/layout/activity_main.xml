@@ -17,7 +17,7 @@
         android:textSize="@dimen/text_size_30"
         android:textColor="@android:color/white"
         android:layout_gravity="center"
-        android:id="@+id/add_child"
+        android:id="@+id/add_kid"
         android:background="@drawable/ksz_button_background"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_80"
