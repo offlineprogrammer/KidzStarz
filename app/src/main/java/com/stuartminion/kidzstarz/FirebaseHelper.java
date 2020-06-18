@@ -12,8 +12,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -62,6 +66,7 @@ public class FirebaseHelper {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "DocumentSnapshot successfully written!");
+//                            listenToUserDocument();
                             emitter.onNext(m_User);
                         }
                     })
@@ -77,6 +82,33 @@ public class FirebaseHelper {
 
 
 
+
+    Observable<User> getUserData() {
+        return Observable.create((ObservableEmitter<User> emitter) -> {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        final DocumentReference docRef = m_db.collection("users").document(currentUser.getUid());
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: " + snapshot.getData());
+                    m_User =  snapshot.toObject(User.class);
+                    Log.d(TAG, "Current User: " + m_User);
+                    emitter.onNext(m_User);
+
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
+        });
+    }
 
 
     public void logEvent(String event_name) {

@@ -90,7 +90,8 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "Currently Signed in: " + currentUser.getEmail());
             Log.d(TAG, "onStart: " + currentUser.getUid());
             //   showToastMessage("Currently Logged in: " + currentUser.getEmail());
-            launchMainActivity(firebaseHelper.m_User);
+            getUserData();
+
         }
     }
 
@@ -148,6 +149,43 @@ public class LoginActivity extends AppCompatActivity {
     /*private void showToastMessage(String message) {
         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
     }*/
+
+    private void getUserData() {
+        firebaseHelper.getUserData().observeOn(Schedulers.io())
+                //.observeOn(Schedulers.m)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<User>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(User user) {
+                        Log.d(TAG, "onNext: " + user.getUserId());
+                        Log.d(TAG, "onNext: m_User " + firebaseHelper.m_User.getUserEmail());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                launchMainActivity(user);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
+
+    }
 
     private void saveUser() {
         firebaseHelper.saveUser().observeOn(Schedulers.io())
