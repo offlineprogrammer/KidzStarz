@@ -22,6 +22,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.stuartminion.kidzstarz.user.User;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,8 +34,9 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1001;
 
     GoogleSignInClient googleSignInClient;
+    FirebaseHelper firebaseHelper;
+    private Disposable disposable;
 
-    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +45,17 @@ public class LoginActivity extends AppCompatActivity {
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
-
-
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 // Launch Sign In
                 signInToGoogle();
             }
         });
-
         // Configure Google Client
         configureGoogleClient();
+
+
+
     }
 
     private void configureGoogleClient() {
@@ -69,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         signInButton.setSize(SignInButton.SIZE_WIDE);
 
         // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseHelper = new FirebaseHelper(getApplicationContext());
     }
 
     @Override
@@ -77,12 +83,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        FirebaseUser currentUser = firebaseHelper.firebaseAuth.getCurrentUser();
+
 
         if (currentUser != null) {
             Log.d(TAG, "Currently Signed in: " + currentUser.getEmail());
+            Log.d(TAG, "onStart: " + currentUser.getUid());
             //   showToastMessage("Currently Logged in: " + currentUser.getEmail());
-            launchMainActivity(currentUser);
+            launchMainActivity(firebaseHelper.m_User);
         }
     }
 
@@ -114,18 +122,18 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        firebaseAuth.signInWithCredential(credential)
+        firebaseHelper.firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            FirebaseUser user = firebaseHelper.firebaseAuth.getCurrentUser();
 
                             Log.d(TAG, "signInWithCredential:success: currentUser: " + user.getEmail());
 
                             //              showToastMessage("Firebase Authentication Succeeded ");
-                            launchMainActivity(user);
+                            saveUser();
                         } else {
                             // If sign in fails, display a message to the user.
 
@@ -141,12 +149,47 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
     }*/
 
-    private void launchMainActivity(FirebaseUser user) {
+    private void saveUser() {
+        firebaseHelper.saveUser().observeOn(Schedulers.io())
+                //.observeOn(Schedulers.m)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<User>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(User user) {
+                        Log.d(TAG, "onNext: " + user.getUserId());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                launchMainActivity(user);
+                            }
+                        });
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
+    }
+
+    private void launchMainActivity(User user) {
         if (user != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
-            //MainActivity.startActivity(this, user.getDisplayName());
-            //finish();
+
         }
     }
 }

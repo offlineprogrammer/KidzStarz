@@ -17,6 +17,7 @@ import android.widget.Button;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.stuartminion.kidzstarz.kid.Kid;
+import com.stuartminion.kidzstarz.user.User;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +26,8 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-
+    FirebaseHelper firebaseHelper;
+    User m_User;
     ProgressDialog progressBar;
 
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
        // setupProgressBar();
         configActionButton();
+       // getUserData(deviceToken);
     }
 
 
