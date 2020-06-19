@@ -37,18 +37,21 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 
 public class FirebaseHelper {
-    User m_User;
+   // User m_User;
     FirebaseFirestore m_db;
     FirebaseAuth firebaseAuth;
     FirebaseAnalytics mFirebaseAnalytics;
     private static final String TAG = "FirebaseHelper";
     Context mContext;
+    KidzStarz kidzStarz;
 
     public FirebaseHelper(Context c){
         m_db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         mContext = c;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
+         kidzStarz = (KidzStarz) mContext;
     }
 
     Observable<User> saveUser() {
@@ -56,9 +59,9 @@ public class FirebaseHelper {
             Date currentTime = Calendar.getInstance().getTime();
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-            m_User = new User(currentUser.getUid(),currentUser.getEmail(), currentTime);
+           kidzStarz.setUser(new User(currentUser.getUid(),currentUser.getEmail(), currentTime));
 
-            Map<String, Object> user = m_User.toMap();
+            Map<String, Object> user = kidzStarz.getUser().toMap();
 
             m_db.collection("users").document(currentUser.getUid())
                     .set(user)
@@ -67,7 +70,7 @@ public class FirebaseHelper {
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "DocumentSnapshot successfully written!");
 //                            listenToUserDocument();
-                            emitter.onNext(m_User);
+                            emitter.onNext(kidzStarz.getUser());
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -98,9 +101,9 @@ public class FirebaseHelper {
 
                 if (snapshot != null && snapshot.exists()) {
                     Log.d(TAG, "Current data: " + snapshot.getData());
-                    m_User =  snapshot.toObject(User.class);
-                    Log.d(TAG, "Current User: " + m_User);
-                    emitter.onNext(m_User);
+                    kidzStarz.setUser(snapshot.toObject(User.class));
+                    Log.d(TAG, "Current User: " + kidzStarz.getUser());
+                    emitter.onNext(kidzStarz.getUser());
 
                 } else {
                     Log.d(TAG, "Current data: null");
@@ -113,5 +116,30 @@ public class FirebaseHelper {
 
     public void logEvent(String event_name) {
         mFirebaseAnalytics.logEvent(event_name, null);
+    }
+
+    public Observable<Kid> saveKid(Kid newKid) {
+        return Observable.create((ObservableEmitter<Kid> emitter) -> {
+            DocumentReference newKidRef = m_db.collection("users").document(kidzStarz.getUser().getUserId()).collection("kidz").document();
+            newKid.setFirestoreId(newKidRef.getId());
+            newKid.setUserFirestoreId(kidzStarz.getUser().getUserId());
+            Map<String, Object> kidValues = newKid.toMap();
+            newKidRef.set(kidValues, SetOptions.merge())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Add Kid", "DocumentSnapshot successfully written!");
+                            emitter.onNext(newKid);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("Add Kid", "Error writing document", e);
+                            emitter.onError(e);
+                        }
+                    });
+
+        });
     }
 }

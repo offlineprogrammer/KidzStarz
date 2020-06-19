@@ -170,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onNext(User user) {
                         Log.d(TAG, "onNext: " + user.getUserId());
-                        Log.d(TAG, "onNext: m_User " + firebaseHelper.m_User.getUserEmail());
+                        Log.d(TAG, "onNext: m_User " + firebaseHelper.kidzStarz.getUser().getUserEmail());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

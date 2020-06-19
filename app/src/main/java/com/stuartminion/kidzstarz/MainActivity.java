@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,18 +24,24 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     FirebaseHelper firebaseHelper;
     User m_User;
     ProgressDialog progressBar;
+    private Disposable disposable;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firebaseHelper = new FirebaseHelper(getApplicationContext());
        // setupProgressBar();
         configActionButton();
        // getUserData(deviceToken);
@@ -107,6 +114,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveKid(Kid newKid) {
+
+        firebaseHelper.saveKid(newKid).observeOn(Schedulers.io())
+                //.observeOn(Schedulers.m)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Kid>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(Kid kid) {
+                        Log.d(TAG, "onNext: " + kid.getFirestoreId());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                firebaseHelper.logEvent("kid_created");
+                                //updateRecylerView(kid);
+                            }
+                        });
+
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
 
     }
 
