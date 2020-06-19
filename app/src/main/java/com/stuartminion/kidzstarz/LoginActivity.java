@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -36,13 +37,16 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInClient googleSignInClient;
     FirebaseHelper firebaseHelper;
     private Disposable disposable;
+    private ProgressBar mLogInProgress;
+    SignInButton signInButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        mLogInProgress = findViewById(R.id.log_in_progress);
+         signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +91,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
         if (currentUser != null) {
+            mLogInProgress.setVisibility(View.VISIBLE);
+            signInButton.setVisibility(View.GONE);
             Log.d(TAG, "Currently Signed in: " + currentUser.getEmail());
             Log.d(TAG, "onStart: " + currentUser.getUid());
             //   showToastMessage("Currently Logged in: " + currentUser.getEmail());

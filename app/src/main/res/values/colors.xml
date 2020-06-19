@@ -12,5 +12,6 @@
     <color name="guestTextView_color">#9e9e9e</color>
     <color name="colorPlanItemCheckedBackground">#4CAF50</color>
     <color name="colorPlanItemUnCheckedBackground">#FFC107</color>
+    <color name="transparent">#80000000</color>
 
 </resources>
