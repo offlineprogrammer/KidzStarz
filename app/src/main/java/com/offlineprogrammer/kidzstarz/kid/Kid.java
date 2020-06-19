@@ -1,4 +1,4 @@
-package com.stuartminion.kidzstarz.kid;
+package com.offlineprogrammer.kidzstarz.kid;
 
 import android.os.Parcel;
 import android.os.Parcelable;

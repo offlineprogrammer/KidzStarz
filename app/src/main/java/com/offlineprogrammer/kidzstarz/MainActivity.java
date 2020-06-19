@@ -1,7 +1,10 @@
-package com.stuartminion.kidzstarz;
+package com.offlineprogrammer.kidzstarz;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,9 +20,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.stuartminion.kidzstarz.kid.Kid;
-import com.stuartminion.kidzstarz.user.User;
+import com.offlineprogrammer.kidzstarz.kid.Kid;
+import com.offlineprogrammer.kidzstarz.kid.KidAdapter;
+import com.offlineprogrammer.kidzstarz.kid.OnKidListener;
+import com.offlineprogrammer.kidzstarz.user.User;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -29,12 +35,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnKidListener {
     private static final String TAG = "MainActivity";
     FirebaseHelper firebaseHelper;
     User m_User;
     ProgressDialog progressBar;
     private Disposable disposable;
+    private KidAdapter kidAdapter;
+    private ArrayList<Kid> kidzList = new ArrayList<>();
+    ViewPager2 view_pager;
 
 
     @Override
@@ -44,9 +53,19 @@ public class MainActivity extends AppCompatActivity {
         firebaseHelper = new FirebaseHelper(getApplicationContext());
        // setupProgressBar();
         configActionButton();
-       // getUserData(deviceToken);
+        setupViewPager();
+
+
     }
 
+    private void setupViewPager() {
+        kidAdapter = new KidAdapter(kidzList,this);
+        view_pager = findViewById(R.id.view_pager);
+        view_pager.setAdapter(kidAdapter);
+
+
+
+    }
 
     private void configActionButton() {
         Button add_kid = findViewById(R.id.add_kid);
@@ -113,6 +132,13 @@ public class MainActivity extends AppCompatActivity {
         builder.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
+    private void updateViewPager(Kid kid) {
+        Log.i(TAG, "onClick UserFireStore : " + kid.getUserFirestoreId());
+        Log.i(TAG, "onClick KidFireStore : " + kid.getFirestoreId());
+        kidAdapter.add(kid, 0);
+        dismissProgressBar();
+    }
+
     private void saveKid(Kid newKid) {
 
         firebaseHelper.saveKid(newKid).observeOn(Schedulers.io())
@@ -132,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 firebaseHelper.logEvent("kid_created");
-                                //updateRecylerView(kid);
+                                updateViewPager(kid);
                             }
                         });
 
@@ -225,5 +251,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onKidClick(int position) {
 
+    }
 }

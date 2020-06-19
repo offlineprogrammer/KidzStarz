@@ -1,4 +1,4 @@
-package com.stuartminion.kidzstarz;
+package com.offlineprogrammer.kidzstarz;
 
 import org.junit.Test;
 

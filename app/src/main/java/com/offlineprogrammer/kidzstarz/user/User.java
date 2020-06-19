@@ -1,4 +1,4 @@
-package com.stuartminion.kidzstarz.user;
+package com.offlineprogrammer.kidzstarz.user;
 
 import com.google.firebase.database.Exclude;
 

@@ -1,8 +1,8 @@
-package com.stuartminion.kidzstarz;
+package com.offlineprogrammer.kidzstarz;
 
 import android.app.Application;
 
-import com.stuartminion.kidzstarz.user.User;
+import com.offlineprogrammer.kidzstarz.user.User;
 
 public class KidzStarz extends Application {
     private User m_User;
