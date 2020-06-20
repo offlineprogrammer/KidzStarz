@@ -18,6 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     private KidAdapter kidAdapter;
     private ArrayList<Kid> kidzList = new ArrayList<>();
     ViewPager2 view_pager;
+    private LinearLayout container;
 
 
     @Override
@@ -54,12 +58,27 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
        // setupProgressBar();
         configActionButton();
         setupViewPager();
+        container = findViewById(R.id.indicator_container);
+        populateIndicator();
 
 
     }
 
+    private void populateIndicator() {
+        this.container.removeAllViewsInLayout();
+        for (int i = 0; i < firebaseHelper.kidzStarz.getUser().getKidz().size(); i++) {
+            LayoutParams layoutParams = new LayoutParams(-2, -2);
+            layoutParams.setMargins(5, 0, 5, 0);
+            ImageView imageView = new ImageView(this);
+            imageView.setLayoutParams(layoutParams);
+            imageView.setImageDrawable(getDrawable(R.drawable.scroll_indicator));
+            this.container.addView(imageView);
+        }
+    }
+
+
     private void setupViewPager() {
-        kidAdapter = new KidAdapter(kidzList,this);
+        kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(),this);
         view_pager = findViewById(R.id.view_pager);
         view_pager.setAdapter(kidAdapter);
 
@@ -133,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     }
 
     private void updateViewPager(Kid kid) {
-        Log.i(TAG, "onClick UserFireStore : " + kid.getUserFirestoreId());
-        Log.i(TAG, "onClick KidFireStore : " + kid.getFirestoreId());
+        Log.i(TAG, "onClick UserFireStore : " + kid.getKidName());
+
         kidAdapter.add(kid, 0);
         dismissProgressBar();
     }
@@ -153,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
 
                     @Override
                     public void onNext(Kid kid) {
-                        Log.d(TAG, "onNext: " + kid.getFirestoreId());
+                        Log.d(TAG, "onNext: " + kid.getKidName());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

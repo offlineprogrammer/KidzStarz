@@ -95,6 +95,7 @@ public class FirebaseHelper {
                     Log.d(TAG, "Current data: " + snapshot.getData());
                     kidzStarz.setUser(snapshot.toObject(User.class));
                     Log.d(TAG, "Current User: " + kidzStarz.getUser());
+                    Log.d(TAG, "onEvent: User Kidz " +  kidzStarz.getUser().getKidz());
                     emitter.onNext(kidzStarz.getUser());
 
                 } else {
@@ -112,11 +113,9 @@ public class FirebaseHelper {
 
     public Observable<Kid> saveKid(Kid newKid) {
         return Observable.create((ObservableEmitter<Kid> emitter) -> {
-            DocumentReference newKidRef = m_db.collection("users").document(kidzStarz.getUser().getUserId()).collection("kidz").document();
-            newKid.setFirestoreId(newKidRef.getId());
-            newKid.setUserFirestoreId(kidzStarz.getUser().getUserId());
-            Map<String, Object> kidValues = newKid.toMap();
-            newKidRef.set(kidValues, SetOptions.merge())
+            kidzStarz.getUser().getKidz().add(newKid);
+            DocumentReference newKidRef = m_db.collection("users").document(kidzStarz.getUser().getUserId());//.collection("kidz").document();
+            newKidRef.update("kidz",kidzStarz.getUser().getKidz())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

@@ -1,7 +1,9 @@
 package com.offlineprogrammer.kidzstarz.user;
 
 import com.google.firebase.database.Exclude;
+import com.offlineprogrammer.kidzstarz.kid.Kid;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ public class User {
     private String userId;
     private String userEmail;
     private Date dateCreated;
+    private ArrayList<Kid> kidz = new ArrayList<>();
 
     public User(String userId, String userEmail, Date dateCreated) {
         this.userId = userId;
@@ -52,6 +55,15 @@ public class User {
         result.put("userId", this.userId);
         result.put("userEmail", this.userEmail);
         result.put("dateCreated", this.dateCreated);
+        result.put("kidz", this.kidz);
         return result;
+    }
+
+    public ArrayList<Kid> getKidz() {
+        return kidz;
+    }
+
+    public void setKidz(ArrayList<Kid> kidz) {
+        this.kidz = kidz;
     }
 }

@@ -15,8 +15,6 @@ public class Kid implements Parcelable {
     private String kidName;
     private String monsterImageResourceName;
     private Date createdDate;
-    private String firestoreId;
-    private String userFirestoreId;
     private int happyStarz;
     private int sadStarz;
 
@@ -36,8 +34,7 @@ public class Kid implements Parcelable {
     protected Kid(Parcel in) {
         kidName = in.readString();
         monsterImageResourceName = in.readString();
-        firestoreId = in.readString();
-        userFirestoreId = in.readString();
+
     }
 
     public static final Creator<Kid> CREATOR = new Creator<Kid>() {
@@ -61,8 +58,7 @@ public class Kid implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(kidName);
         dest.writeString(monsterImageResourceName);
-        dest.writeString(firestoreId);
-        dest.writeString(userFirestoreId);
+
     }
 
     @NonNull
@@ -81,16 +77,14 @@ public class Kid implements Parcelable {
         result.put("kidName", this.kidName);
         result.put("monsterImageResourceName", this.monsterImageResourceName);
         result.put("createdDate", this.createdDate);
-        result.put("firestoreId", this.firestoreId);
-        result.put("userFirestoreId", this.userFirestoreId);
+
         return result;
     }
 
     @Override
     public String toString() {
         return "Kid{" +
-                "firestoreId='" + firestoreId + '\'' +
-                ", userFirestoreId='" + userFirestoreId + '\'' +
+
                 ", kidName='" + kidName + '\'' +
                 '}';
     }
@@ -103,21 +97,6 @@ public class Kid implements Parcelable {
         this.createdDate = createdDate;
     }
 
-    public String getFirestoreId() {
-        return firestoreId;
-    }
-
-    public void setFirestoreId(String firestoreId) {
-        this.firestoreId = firestoreId;
-    }
-
-    public String getUserFirestoreId() {
-        return userFirestoreId;
-    }
-
-    public void setUserFirestoreId(String userFirestoreId) {
-        this.userFirestoreId = userFirestoreId;
-    }
 
     public String getMonsterImageResourceName() {
         return monsterImageResourceName;
