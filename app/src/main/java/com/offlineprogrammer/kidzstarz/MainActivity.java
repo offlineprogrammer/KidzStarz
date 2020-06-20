@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         setupViewPager();
         container = findViewById(R.id.indicator_container);
         populateIndicator();
+        setIndicator(0);
 
 
     }
@@ -75,12 +76,37 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
             this.container.addView(imageView);
         }
     }
+    private void setIndicator(int i) {
+        int childCount = this.container.getChildCount();
+        for (int i2 = 0; i2 < childCount; i2++) {
+            if (i2 == i) {
+                this.container.getChildAt(i2).setSelected(true);
+            } else {
+                this.container.getChildAt(i2).setSelected(false);
+            }
+        }
+    }
+
+
 
 
     private void setupViewPager() {
         kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(),this);
         view_pager = findViewById(R.id.view_pager);
         view_pager.setAdapter(kidAdapter);
+        view_pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                setIndicator(position);
+
+                Log.e("Selected_Page", String.valueOf(position));
+            }
+
+
+        });
 
 
 
