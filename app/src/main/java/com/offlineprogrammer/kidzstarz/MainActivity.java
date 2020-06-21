@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         setIndicator(0);
 
 
+
     }
 
     private void populateIndicator() {
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                Log.d(TAG, "onPageSelected: position " + position);
                 setIndicator(position);
 
                 Log.e("Selected_Page", String.valueOf(position));
@@ -181,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         Log.i(TAG, "onClick UserFireStore : " + kid.getKidName());
 
         kidAdapter.add(kid, 0);
+        setIndicator(firebaseHelper.kidzStarz.getUser().getKidz().size()-1);
+        setIndicator(firebaseHelper.kidzStarz.getUser().getKidz().size()-1);
         dismissProgressBar();
     }
 
