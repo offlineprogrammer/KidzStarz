@@ -20,6 +20,13 @@
     <string name="plan_adMob_unit_id">ca-app-pub-7065714443867225/3470509679</string>
     <string name="kid_adMob_unit_id">ca-app-pub-7065714443867225/9880005359</string>
     <string name="main_adMob_unit_id">ca-app-pub-7065714443867225/8758495379</string>
+    <string name="ksz_hint_happystar_desc">Well done!! What happened?</string>
+    <string name="ksz_hint_happystar_count">Happy Starz Count</string>
+    <string name="kks_button_cancel">Cancel</string>
+    <string name="ksz_button_save">Save</string>
+    <string name="ksz_button_cancel">Cancel</string>
+    <string name="ksz_hint_sadstar_desc">Oh no...What happened?</string>
+    <string name="ksz_hint_sadstar_count">Sad Starz Count</string>
 
     <!--<string name="plan_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="kid_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
