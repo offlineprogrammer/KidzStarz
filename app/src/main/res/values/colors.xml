@@ -14,4 +14,8 @@
     <color name="colorPlanItemUnCheckedBackground">#FFC107</color>
     <color name="transparent">#80000000</color>
 
+    <color name="hint_black">#4a4a4a</color>
+    <color name="round_black">#000000</color>
+    <color name="round_green">#4CAF50</color>
+    <color name="round_red">#F44336</color>
 </resources>
