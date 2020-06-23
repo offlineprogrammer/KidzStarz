@@ -8,6 +8,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:674147517853:android:fea48af1bf649c9bb39b74",
+        "android_client_info": {
+          "package_name": "com.offlineprogrammer.kidzstarz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674147517853-iejfd6knfrsnd6ranth7i927n9ea4m22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.offlineprogrammer.kidzstarz",
+            "certificate_hash": "49b09f5dcefe9bdc211315ed27e921c6e3896d9c"
+          }
+        },
+        {
+          "client_id": "674147517853-457ucrm37ek09l7ojldmqtorju2i5duq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAibH6o6XPGlwDnClQeZFXWO-YPzQAIliY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674147517853-457ucrm37ek09l7ojldmqtorju2i5duq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:674147517853:android:210ad3a4b53ec9cab39b74",
         "android_client_info": {
           "package_name": "com.stuartminion.kidzstarz"
