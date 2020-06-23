@@ -304,4 +304,96 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     public void onKidClick(int position) {
 
     }
+
+    @Override
+    public void showAddHappyStarzDialog(int position) {
+        Log.i(TAG, "showAddHappyStarzDialog: clicked " + position);
+        showAddHappyStarzDialog(MainActivity.this);
+    }
+
+    @Override
+    public void showAddSadStarzDialog(int position) {
+        Log.i(TAG, "showAddSadStarzDialog: clicked " + position);
+        showAddSadStarzDialog(MainActivity.this);
+
+    }
+
+
+    private void showAddHappyStarzDialog(Context c) {
+        final AlertDialog builder = new AlertDialog.Builder(c).create();
+        LayoutInflater inflater = LayoutInflater.from(c);
+        View dialogView = inflater.inflate(R.layout.alert_dialog_add_happystar, null);
+        final TextInputLayout HappyStarDescText = (TextInputLayout) dialogView.findViewById(R.id.happystar_desc_text_input);
+        final TextInputLayout HappyStarCountText = (TextInputLayout) dialogView.findViewById(R.id.happystar_count_text_input);
+        HappyStarDescText.requestFocus();
+        Button okBtn= dialogView.findViewById(R.id.happystar_save_button);
+        Button cancelBtn = dialogView.findViewById(R.id.happystar_cancel_button);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String happyStarDesc = String.valueOf(HappyStarDescText.getEditText().getText());
+                if (!isDescValid(happyStarDesc)) {
+                    HappyStarDescText.setError(c.getString(R.string.star_desc_error));
+                } else {
+                    HappyStarDescText.setError(null);
+                    Date currentTime = Calendar.getInstance().getTime();
+                    builder.dismiss();
+                }
+
+
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                builder.dismiss();
+
+                // btnAdd1 has been clicked
+
+            }
+        });
+        builder.setView(dialogView);
+        builder.show();
+        builder.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    }
+
+    private void showAddSadStarzDialog(Context c) {
+        final AlertDialog builder = new AlertDialog.Builder(c).create();
+        LayoutInflater inflater = LayoutInflater.from(c);
+        View dialogView = inflater.inflate(R.layout.alert_dialog_add_sadstar, null);
+        final TextInputLayout sadStarDescText = (TextInputLayout) dialogView.findViewById(R.id.sadstar_desc_text_input);
+        final TextInputLayout sadStarCountText = (TextInputLayout) dialogView.findViewById(R.id.sadstar_count_text_input);
+        sadStarDescText.requestFocus();
+        Button okBtn= dialogView.findViewById(R.id.sadstar_save_button);
+        Button cancelBtn = dialogView.findViewById(R.id.sadstar_cancel_button);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String happyStarDesc = String.valueOf(sadStarDescText.getEditText().getText());
+                if (!isDescValid(happyStarDesc)) {
+                    sadStarDescText.setError(c.getString(R.string.star_desc_error));
+                } else {
+                    sadStarDescText.setError(null);
+                    Date currentTime = Calendar.getInstance().getTime();
+                    builder.dismiss();
+                }
+
+
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                builder.dismiss();
+
+                // btnAdd1 has been clicked
+
+            }
+        });
+        builder.setView(dialogView);
+        builder.show();
+        builder.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    }
+
+    private boolean isDescValid(String starDesc) {
+        return starDesc != null && starDesc.length() >= 2;
+    }
 }

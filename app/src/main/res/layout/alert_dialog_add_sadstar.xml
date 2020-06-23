@@ -51,7 +51,7 @@
             android:text="@string/ksz_button_save" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/happystar_cancel_button"
+            android:id="@+id/sadstar_cancel_button"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -75,7 +75,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/angry_button"
+                android:id="@+id/sad_button"
                 android:layout_width="@dimen/margin_80"
                 android:layout_height="@dimen/margin_80"
                 android:layout_gravity="center"
