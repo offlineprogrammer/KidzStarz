@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                     Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
                     Starz happyStarz = new Starz( selectedKid.getKidUUID(),happyStarDesc,Integer.valueOf(happyStarCount.trim()).intValue(),Constants.HAPPY);
                     setupProgressBar();
-                    saveStarz(happyStarz);
+                    saveStarz(happyStarz, position);
 //                    updateKidStarz(selectedKid,happyStarz);
                     builder.dismiss();
                 }
@@ -368,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         builder.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
-    private void saveStarz(Starz starz) {
+    private void saveStarz(Starz starz, int position) {
 
         firebaseHelper.saveStarz(starz).observeOn(Schedulers.io())
                 //.observeOn(Schedulers.m)
@@ -387,7 +387,14 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                             @Override
                             public void run() {
                                 firebaseHelper.logEvent("starz_created");
-                                dismissProgressBar();
+                                //dismissProgressBar();
+                                firebaseHelper.updateKidStarz(createdStarz, position)
+                                        .subscribe(() -> {
+                                            Log.i(TAG, "updateKidzCollection: completed");
+                                            dismissProgressBar();
+                                        }, throwable -> {
+                                            // handle error
+                                        });
 
                             }
                         });

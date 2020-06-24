@@ -182,4 +182,45 @@ public class FirebaseHelper {
 
 
     }
+
+    public Completable updateKidStarz(Starz createdStarz, int position) {
+        return Completable.create(emitter -> {
+
+            Kid selectedKid = kidzStarz.getUser().getKidz().get(position);
+
+            int totalStarzCount = selectedKid.getTotalStarz();
+            int newStarzCount = 0;
+            if (createdStarz.getType().equals(Constants.HAPPY)) {
+                totalStarzCount = totalStarzCount + createdStarz.getCount();
+                newStarzCount = selectedKid.getHappyStarz() + createdStarz.getCount();
+                selectedKid.setTotalStarz(totalStarzCount);
+                selectedKid.setHappyStarz(newStarzCount);
+            } else {
+                totalStarzCount = totalStarzCount - createdStarz.getCount();
+                newStarzCount = selectedKid.getSadStarz() + createdStarz.getCount();
+                selectedKid.setTotalStarz(totalStarzCount);
+                selectedKid.setSadStarz(newStarzCount);
+            }
+
+            kidzStarz.getUser().getKidz().set(position, selectedKid);
+
+            DocumentReference newKidRef = m_db.collection("users").document(kidzStarz.getUser().getUserId());//.collection("kidz").document();
+            newKidRef.update("kidz", kidzStarz.getUser().getKidz())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Add Kid", "DocumentSnapshot successfully written!");
+                            emitter.onComplete();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("Add Kid", "Error writing document", e);
+                            emitter.onError(e);
+                        }
+                    });
+        });
+
+    }
 }
