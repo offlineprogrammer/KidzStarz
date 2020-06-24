@@ -16,11 +16,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.SetOptions;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.offlineprogrammer.kidzstarz.starz.Starz;
 import com.offlineprogrammer.kidzstarz.user.User;
-
 
 import java.util.Calendar;
 import java.util.Date;
@@ -160,8 +158,27 @@ public class FirebaseHelper {
     }
 
     public Observable<Starz> saveStarz(Starz starz) {
-        return null;
+        return Observable.create((ObservableEmitter<Starz> emitter) -> {
+            DocumentReference newStarzRef = m_db.collection("users").document(kidzStarz.getUser().getUserId())
+                    .collection("kidzStarz").document(starz.getKidUUID())
+                    .collection("starz").document();
+            newStarzRef.set(starz)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "onSuccess: DocumentSnapshot successfully written!");
+                            emitter.onNext(starz);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: Error writing document " + e.getMessage());
+                            emitter.onError(e);
+                        }
+                    });
 
+        });
 
 
     }

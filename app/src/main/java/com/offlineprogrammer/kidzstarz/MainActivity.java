@@ -1,9 +1,5 @@
 package com.offlineprogrammer.kidzstarz;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +15,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
@@ -329,10 +329,10 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         final AlertDialog builder = new AlertDialog.Builder(c).create();
         LayoutInflater inflater = LayoutInflater.from(c);
         View dialogView = inflater.inflate(R.layout.alert_dialog_add_happystar, null);
-        final TextInputLayout HappyStarDescText = (TextInputLayout) dialogView.findViewById(R.id.happystar_desc_text_input);
-        final TextInputLayout HappyStarCountText = (TextInputLayout) dialogView.findViewById(R.id.happystar_count_text_input);
+        final TextInputLayout HappyStarDescText = dialogView.findViewById(R.id.happystar_desc_text_input);
+        final TextInputLayout HappyStarCountText = dialogView.findViewById(R.id.happystar_count_text_input);
         HappyStarDescText.requestFocus();
-        Button okBtn= dialogView.findViewById(R.id.happystar_save_button);
+        Button okBtn = dialogView.findViewById(R.id.happystar_save_button);
         Button cancelBtn = dialogView.findViewById(R.id.happystar_cancel_button);
         okBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -387,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                             @Override
                             public void run() {
                                 firebaseHelper.logEvent("starz_created");
+                                dismissProgressBar();
 
                             }
                         });
@@ -412,10 +413,10 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         final AlertDialog builder = new AlertDialog.Builder(c).create();
         LayoutInflater inflater = LayoutInflater.from(c);
         View dialogView = inflater.inflate(R.layout.alert_dialog_add_sadstar, null);
-        final TextInputLayout sadStarDescText = (TextInputLayout) dialogView.findViewById(R.id.sadstar_desc_text_input);
-        final TextInputLayout sadStarCountText = (TextInputLayout) dialogView.findViewById(R.id.sadstar_count_text_input);
+        final TextInputLayout sadStarDescText = dialogView.findViewById(R.id.sadstar_desc_text_input);
+        final TextInputLayout sadStarCountText = dialogView.findViewById(R.id.sadstar_count_text_input);
         sadStarDescText.requestFocus();
-        Button okBtn= dialogView.findViewById(R.id.sadstar_save_button);
+        Button okBtn = dialogView.findViewById(R.id.sadstar_save_button);
         Button cancelBtn = dialogView.findViewById(R.id.sadstar_cancel_button);
         okBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

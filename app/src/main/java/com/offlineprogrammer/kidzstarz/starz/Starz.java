@@ -1,5 +1,6 @@
 package com.offlineprogrammer.kidzstarz.starz;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Starz {
@@ -15,6 +16,7 @@ public class Starz {
         this.desc = desc;
         this.count = count;
         this.type = type;
+        this.createdDate = Calendar.getInstance().getTime();
     }
 
     public String getKidUUID() {
@@ -47,5 +49,13 @@ public class Starz {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 }
