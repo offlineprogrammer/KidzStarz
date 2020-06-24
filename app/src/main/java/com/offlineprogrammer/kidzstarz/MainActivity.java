@@ -427,12 +427,18 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         Button cancelBtn = dialogView.findViewById(R.id.sadstar_cancel_button);
         okBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String happyStarDesc = String.valueOf(sadStarDescText.getEditText().getText());
-                if (!isDescValid(happyStarDesc)) {
+                String sadStarDesc = String.valueOf(sadStarDescText.getEditText().getText());
+                String sadStarCount = String.valueOf(sadStarCountText.getEditText().getText());
+                if (!isDescValid(sadStarDesc)) {
                     sadStarDescText.setError(c.getString(R.string.star_desc_error));
                 } else {
                     sadStarDescText.setError(null);
                     Date currentTime = Calendar.getInstance().getTime();
+                    Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
+                    Starz sadStarz = new Starz(selectedKid.getKidUUID(), sadStarDesc, Integer.valueOf(sadStarCount.trim()).intValue(), Constants.SAD);
+                    setupProgressBar();
+                    saveStarz(sadStarz, position);
+
                     builder.dismiss();
                 }
 
