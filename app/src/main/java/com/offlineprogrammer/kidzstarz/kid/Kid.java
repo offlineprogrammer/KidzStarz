@@ -10,6 +10,7 @@ import com.google.firebase.database.Exclude;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Kid implements Parcelable {
     private String kidName;
@@ -17,6 +18,9 @@ public class Kid implements Parcelable {
     private Date createdDate;
     private int happyStarz;
     private int sadStarz;
+    private int redeemedStarz;
+    private int totalStarz;
+    private String kidUUID;
 
 
     public Kid(String kidName, String monsterImageResourceName, Date createdDate) {
@@ -24,6 +28,7 @@ public class Kid implements Parcelable {
         this.kidName = kidName;
         this.monsterImageResourceName = monsterImageResourceName;
         this.createdDate = createdDate;
+        this.kidUUID = UUID.randomUUID().toString();
     }
 
     public Kid() {
@@ -75,8 +80,9 @@ public class Kid implements Parcelable {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("kidName", this.kidName);
-        result.put("monsterImageResourceName", this.monsterImageResourceName);
+        result.put("kidUUID", this.kidUUID);
         result.put("createdDate", this.createdDate);
+
 
         return result;
     }
@@ -120,5 +126,25 @@ public class Kid implements Parcelable {
 
     public void setHappyStarz(int happyStarz) {
         this.happyStarz = happyStarz;
+    }
+
+    public String getKidUUID() {
+        return kidUUID;
+    }
+
+    public int getTotalStarz() {
+        return totalStarz;
+    }
+
+    public void setTotalStarz(int totalStarz) {
+        this.totalStarz = totalStarz;
+    }
+
+    public int getRedeemedStarz() {
+        return redeemedStarz;
+    }
+
+    public void setRedeemedStarz(int redeemedStarz) {
+        this.redeemedStarz = redeemedStarz;
     }
 }

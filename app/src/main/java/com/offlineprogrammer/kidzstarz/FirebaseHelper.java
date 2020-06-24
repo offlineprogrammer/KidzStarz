@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
+import com.offlineprogrammer.kidzstarz.starz.Starz;
 import com.offlineprogrammer.kidzstarz.user.User;
 
 
@@ -25,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 
@@ -132,5 +134,35 @@ public class FirebaseHelper {
                     });
 
         });
+    }
+
+    public Completable updateKidzCollection(Kid newKid) {
+        return Completable.create( emitter -> {
+            Map<String, Object> kidValues = newKid.toMap();
+            m_db.collection("users").document(kidzStarz.getUser().getUserId()).collection("kidzStarz").document(newKid.getKidUUID())
+                    .set(kidValues)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully written!");
+//                            listenToUserDocument();
+                            emitter.onComplete();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                            emitter.onError(e);
+                        }
+                    });
+        });
+    }
+
+    public Observable<Starz> saveStarz(Starz starz) {
+        return null;
+
+
+
     }
 }

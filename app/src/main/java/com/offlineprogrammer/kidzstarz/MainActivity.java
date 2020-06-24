@@ -2,8 +2,6 @@ package com.offlineprogrammer.kidzstarz;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
@@ -26,6 +24,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.offlineprogrammer.kidzstarz.kid.KidAdapter;
 import com.offlineprogrammer.kidzstarz.kid.OnKidListener;
+import com.offlineprogrammer.kidzstarz.starz.Starz;
 import com.offlineprogrammer.kidzstarz.user.User;
 
 import java.util.ArrayList;
@@ -208,6 +207,13 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                             public void run() {
                                 firebaseHelper.logEvent("kid_created");
                                 updateViewPager(kid);
+                                firebaseHelper.updateKidzCollection(kid)
+                                        .subscribe(() -> {
+                                            Log.i(TAG, "updateKidzCollection: completed");
+                                            // handle completion
+                                        }, throwable -> {
+                                            // handle error
+                                        });
                             }
                         });
 
@@ -308,18 +314,18 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     @Override
     public void showAddHappyStarzDialog(int position) {
         Log.i(TAG, "showAddHappyStarzDialog: clicked " + position);
-        showAddHappyStarzDialog(MainActivity.this);
+        showAddHappyStarzDialog(MainActivity.this, position);
     }
 
     @Override
     public void showAddSadStarzDialog(int position) {
         Log.i(TAG, "showAddSadStarzDialog: clicked " + position);
-        showAddSadStarzDialog(MainActivity.this);
+        showAddSadStarzDialog(MainActivity.this, position);
 
     }
 
 
-    private void showAddHappyStarzDialog(Context c) {
+    private void showAddHappyStarzDialog(Context c, int position) {
         final AlertDialog builder = new AlertDialog.Builder(c).create();
         LayoutInflater inflater = LayoutInflater.from(c);
         View dialogView = inflater.inflate(R.layout.alert_dialog_add_happystar, null);
@@ -331,11 +337,17 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         okBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String happyStarDesc = String.valueOf(HappyStarDescText.getEditText().getText());
+                String happyStarCount = String.valueOf(HappyStarCountText.getEditText().getText());
                 if (!isDescValid(happyStarDesc)) {
                     HappyStarDescText.setError(c.getString(R.string.star_desc_error));
                 } else {
                     HappyStarDescText.setError(null);
                     Date currentTime = Calendar.getInstance().getTime();
+                    Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
+                    Starz happyStarz = new Starz( selectedKid.getKidUUID(),happyStarDesc,Integer.valueOf(happyStarCount.trim()).intValue(),Constants.HAPPY);
+                    setupProgressBar();
+                    saveStarz(happyStarz);
+//                    updateKidStarz(selectedKid,happyStarz);
                     builder.dismiss();
                 }
 
@@ -356,7 +368,47 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         builder.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
-    private void showAddSadStarzDialog(Context c) {
+    private void saveStarz(Starz starz) {
+
+        firebaseHelper.saveStarz(starz).observeOn(Schedulers.io())
+                //.observeOn(Schedulers.m)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Starz>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(Starz createdStarz) {
+                        Log.d(TAG, "onNext: " + createdStarz.getCount());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                firebaseHelper.logEvent("starz_created");
+
+                            }
+                        });
+
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
+
+    }
+
+    private void showAddSadStarzDialog(Context c, int position) {
         final AlertDialog builder = new AlertDialog.Builder(c).create();
         LayoutInflater inflater = LayoutInflater.from(c);
         View dialogView = inflater.inflate(R.layout.alert_dialog_add_sadstar, null);
