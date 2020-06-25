@@ -87,6 +87,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
+        android:id="@+id/buttons_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_20"
@@ -119,7 +120,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-        <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/sad_button"
                 android:layout_width="@dimen/margin_80"
                 android:layout_height="@dimen/margin_80"
@@ -130,4 +131,42 @@
                 app:srcCompat="@drawable/sadstar" />
         </FrameLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/total_starz_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"
+        android:text="@string/total_starz"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/text_size_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttons_linearlayout" />
+
+    <TextView
+        android:id="@+id/total_starz_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_10"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/text_very_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/total_starz_textview" />
+    />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/moreinfo_button"
+        android:layout_width="@dimen/margin_80"
+        android:layout_height="@dimen/margin_80"
+        android:layout_gravity="center"
+        android:background="@drawable/round_yellow"
+        android:contentDescription="@null"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/total_starz_text"
+        app:srcCompat="@drawable/moreinfo64" />
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>

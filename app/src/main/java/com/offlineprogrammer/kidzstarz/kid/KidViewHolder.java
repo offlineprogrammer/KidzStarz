@@ -19,6 +19,7 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
     private ImageButton sad_button;
     private TextView sad_starz;
     private TextView happy_starz;
+    private TextView total_starz_text;
 
     OnKidListener onKidListener;
     private Context mContext;
@@ -33,6 +34,7 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
 
         sad_starz = itemView.findViewById(R.id.sad_starz);
         happy_starz = itemView.findViewById(R.id.happy_starz);
+        total_starz_text = itemView.findViewById(R.id.total_starz_text);
 
         this.onKidListener = onKidListener;
         // itemView.setOnClickListener(this);
@@ -58,6 +60,8 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
     public void bindData(final Kid viewModel) {
         happy_starz.setText(String.format("+ %d", viewModel.getHappyStarz()));
         sad_starz.setText(String.format("- %d", viewModel.getSadStarz()));
+        total_starz_text.setText(String.format("%d", viewModel.getTotalStarz()));
+
 
         kidMonsterImageView.setImageResource(mContext.getResources().getIdentifier(viewModel.getMonsterImageResourceName(), "drawable",
                 mContext.getPackageName()));
