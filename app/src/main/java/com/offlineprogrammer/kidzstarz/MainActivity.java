@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     private LinearLayout container;
 
 
-    // TODO: Add Kid name as Title
-    // TODO: Verify Starz Count
+
 
 
     @Override
@@ -345,11 +344,13 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                 String happyStarCount = String.valueOf(HappyStarCountText.getEditText().getText());
                 if (!isDescValid(happyStarDesc)) {
                     HappyStarDescText.setError(c.getString(R.string.star_desc_error));
+                } else if (!isCountValid(happyStarCount, firebaseHelper.kidzStarz.getUser().getKidz().get(position), Constants.SAD)) {
+                    HappyStarCountText.setError(c.getString(R.string.star_count_error));
                 } else {
                     HappyStarDescText.setError(null);
                     Date currentTime = Calendar.getInstance().getTime();
                     Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
-                    Starz happyStarz = new Starz( selectedKid.getKidUUID(),happyStarDesc,Integer.valueOf(happyStarCount.trim()).intValue(),Constants.HAPPY);
+                    Starz happyStarz = new Starz(selectedKid.getKidUUID(), happyStarDesc, Integer.valueOf(happyStarCount.trim()).intValue(), Constants.HAPPY);
                     setupProgressBar();
                     saveStarz(happyStarz, position);
 //                    updateKidStarz(selectedKid,happyStarz);
@@ -436,6 +437,8 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                 String sadStarCount = String.valueOf(sadStarCountText.getEditText().getText());
                 if (!isDescValid(sadStarDesc)) {
                     sadStarDescText.setError(c.getString(R.string.star_desc_error));
+                } else if (!isCountValid(sadStarCount, firebaseHelper.kidzStarz.getUser().getKidz().get(position), Constants.SAD)) {
+                    sadStarCountText.setError(c.getString(R.string.star_count_error));
                 } else {
                     sadStarDescText.setError(null);
                     Date currentTime = Calendar.getInstance().getTime();
@@ -466,5 +469,21 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
 
     private boolean isDescValid(String starDesc) {
         return starDesc != null && starDesc.length() >= 2;
+    }
+
+    private boolean isCountValid(String starzCount, Kid kid, String starzType) {
+        if (starzCount == null) {
+            return false;
+        }
+        try {
+            Integer iCount = Integer.parseInt(starzCount);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+
+
+        return true;
+
+
     }
 }
