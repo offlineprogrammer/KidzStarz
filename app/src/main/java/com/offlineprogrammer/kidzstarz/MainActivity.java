@@ -60,9 +60,6 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         container = findViewById(R.id.indicator_container);
         populateIndicator();
         setIndicator(0);
-
-
-
     }
 
     private void populateIndicator() {
@@ -108,9 +105,6 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
 
 
         });
-
-
-
     }
 
     private void configActionButton() {

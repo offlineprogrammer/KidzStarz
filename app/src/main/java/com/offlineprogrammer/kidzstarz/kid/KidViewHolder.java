@@ -1,26 +1,15 @@
 package com.offlineprogrammer.kidzstarz.kid;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.offlineprogrammer.kidzstarz.R;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final String TAG = "KidViewHolder";
@@ -28,17 +17,25 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
     private ImageView kidMonsterImageView;
     private ImageButton happy_button;
     private ImageButton sad_button;
+    private TextView sad_starz;
+    private TextView happy_starz;
+
     OnKidListener onKidListener;
     private Context mContext;
+
     public KidViewHolder(@NonNull View itemView, OnKidListener onKidListener) {
         super(itemView);
         mContext = itemView.getContext();
-        kidNameTextView = itemView.findViewById(R.id.kid_name);
+        // kidNameTextView = itemView.findViewById(R.id.kid_name);
         kidMonsterImageView = itemView.findViewById(R.id.kid_monster_name);
         happy_button = itemView.findViewById(R.id.happy_button);
         sad_button = itemView.findViewById(R.id.sad_button);
+
+        sad_starz = itemView.findViewById(R.id.sad_starz);
+        happy_starz = itemView.findViewById(R.id.happy_starz);
+
         this.onKidListener = onKidListener;
-       // itemView.setOnClickListener(this);
+        // itemView.setOnClickListener(this);
 
         happy_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,9 +56,11 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
 
 
     public void bindData(final Kid viewModel) {
-        kidNameTextView.setText(viewModel.getKidName());
-        kidMonsterImageView.setImageResource( mContext.getResources().getIdentifier(viewModel.getMonsterImageResourceName() , "drawable" ,
-                mContext.getPackageName()) );
+        happy_starz.setText(String.format("+ %d", viewModel.getHappyStarz()));
+        sad_starz.setText(String.format("- %d", viewModel.getSadStarz()));
+
+        kidMonsterImageView.setImageResource(mContext.getResources().getIdentifier(viewModel.getMonsterImageResourceName(), "drawable",
+                mContext.getPackageName()));
     }
 
     @Override
