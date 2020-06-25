@@ -49,12 +49,16 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     private LinearLayout container;
 
 
+    // TODO: Add Kid name as Title
+    // TODO: Verify Starz Count
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseHelper = new FirebaseHelper(getApplicationContext());
-       // setupProgressBar();
+        // setupProgressBar();
         configActionButton();
         setupViewPager();
         container = findViewById(R.id.indicator_container);
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
             this.container.addView(imageView);
         }
     }
+
     private void setIndicator(int i) {
         int childCount = this.container.getChildCount();
         for (int i2 = 0; i2 < childCount; i2++) {
@@ -84,11 +89,13 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         }
     }
 
-
+    public void setTitle(int i) {
+        this.setTitle(firebaseHelper.kidzStarz.getUser().getKidz().get(i).getKidName());
+    }
 
 
     private void setupViewPager() {
-        kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(),this);
+        kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(), this);
         view_pager = findViewById(R.id.view_pager);
         view_pager.setAdapter(kidAdapter);
         view_pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -99,6 +106,10 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                 super.onPageSelected(position);
                 Log.d(TAG, "onPageSelected: position " + position);
                 setIndicator(position);
+                if (!(firebaseHelper.kidzStarz.getUser().getKidz().get(position).getKidName() == null)) {
+                    setTitle(position);
+                }
+
 
                 Log.e("Selected_Page", String.valueOf(position));
             }
