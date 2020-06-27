@@ -7,4 +7,6 @@ public interface OnKidListener {
     void showAddHappyStarzDialog(int position);
 
     void showAddSadStarzDialog(int adapterPosition);
+
+    void showMoreInfo(int adapterPosition);
 }

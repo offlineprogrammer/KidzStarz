@@ -20,6 +20,7 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
     private TextView sad_starz;
     private TextView happy_starz;
     private TextView total_starz_text;
+    private ImageButton moreinfo_button;
 
     OnKidListener onKidListener;
     private Context mContext;
@@ -31,6 +32,7 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
         kidMonsterImageView = itemView.findViewById(R.id.kid_monster_name);
         happy_button = itemView.findViewById(R.id.happy_button);
         sad_button = itemView.findViewById(R.id.sad_button);
+        moreinfo_button = itemView.findViewById(R.id.moreinfo_button);
 
         sad_starz = itemView.findViewById(R.id.sad_starz);
         happy_starz = itemView.findViewById(R.id.happy_starz);
@@ -50,6 +52,13 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
             @Override
             public void onClick(View view) {
                 onKidListener.showAddSadStarzDialog(getAdapterPosition());
+            }
+        });
+
+        moreinfo_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onKidListener.showMoreInfo(getAdapterPosition());
             }
         });
 

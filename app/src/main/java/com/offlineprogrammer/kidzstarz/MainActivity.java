@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
@@ -326,6 +327,15 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         Log.i(TAG, "showAddSadStarzDialog: clicked " + position);
         showAddSadStarzDialog(MainActivity.this, position);
 
+    }
+
+    @Override
+    public void showMoreInfo(int position) {
+        Log.i(TAG, "showMoreInfo: Clicked " + position);
+        Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("selected_kid", selectedKid);
+        startActivity(intent);
     }
 
 
