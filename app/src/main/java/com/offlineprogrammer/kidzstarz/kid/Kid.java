@@ -39,6 +39,10 @@ public class Kid implements Parcelable {
     protected Kid(Parcel in) {
         kidName = in.readString();
         monsterImageResourceName = in.readString();
+        happyStarz = in.readInt();
+        sadStarz = in.readInt();
+        totalStarz = in.readInt();
+        kidUUID = in.readString();
 
     }
 
@@ -63,6 +67,10 @@ public class Kid implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(kidName);
         dest.writeString(monsterImageResourceName);
+        dest.writeInt(happyStarz);
+        dest.writeInt(sadStarz);
+        dest.writeInt(totalStarz);
+        dest.writeString(kidUUID);
 
     }
 
