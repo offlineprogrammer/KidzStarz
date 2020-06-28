@@ -19,6 +19,10 @@ public class Starz {
         this.createdDate = Calendar.getInstance().getTime();
     }
 
+    public Starz() {
+
+    }
+
     public String getKidUUID() {
         return kidUUID;
     }

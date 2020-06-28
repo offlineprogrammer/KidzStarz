@@ -5,8 +5,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,10 +18,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.offlineprogrammer.kidzstarz.starz.Starz;
 import com.offlineprogrammer.kidzstarz.user.User;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -222,5 +228,37 @@ public class FirebaseHelper {
                     });
         });
 
+    }
+
+    public Observable<ArrayList<Starz>> getkidStarz(Kid selectedKid) {
+
+        ArrayList<Starz> starzsList = new ArrayList<>();
+        return Observable.create((ObservableEmitter<ArrayList<Starz>> emitter) -> {
+
+
+            DocumentReference selectedKidRef = m_db.collection("users").document(kidzStarz.getUser().getUserId())
+                    .collection("kidzStarz").document(selectedKid.getKidUUID());
+            selectedKidRef.collection("starz")
+                    .orderBy("createdDate", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (document.exists()) {
+                                        Log.d("Got Task Data", document.getId() + " => " + document.getData());
+                                        Starz starz = document.toObject(Starz.class);
+                                        starzsList.add(starz);
+                                    }
+                                }
+                                emitter.onNext(starzsList);
+                            } else {
+                                Log.d("Got Date", "Error getting documents: ", task.getException());
+                                emitter.onError(task.getException());
+                            }
+                        }
+                    });
+        });
     }
 }
