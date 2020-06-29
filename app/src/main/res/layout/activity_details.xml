@@ -89,7 +89,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:fillViewport="true"
         android:background="@color/taskGridBackgroundColor"
         android:paddingStart="@dimen/ksz_starz_grid_spacing"
         android:paddingEnd="@dimen/ksz_starz_grid_spacing"
@@ -101,7 +101,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/starz_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
     </androidx.core.widget.NestedScrollView>
 
