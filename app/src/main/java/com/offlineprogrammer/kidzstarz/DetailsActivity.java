@@ -73,6 +73,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
             @Override
             public void onClick(View view) {
                 Intent mIntent = new Intent(DetailsActivity.this, ClaimStarzActivity.class);
+                mIntent.putExtra("selected_kid", selectedKid);
                 startActivityForResult(mIntent, 3);
             }
         });
