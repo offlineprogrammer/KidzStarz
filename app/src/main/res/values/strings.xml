@@ -31,6 +31,7 @@
     <string name="total_starz">Total Starz</string>
     <string name="star_count_error">we need a number</string>
     <string name="ksz_starz_list">Starz List</string>
+    <string name="ksz_claim_starz">Claim Starz</string>
 
     <!--<string name="plan_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="kid_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>

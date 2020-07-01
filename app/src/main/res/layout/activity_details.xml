@@ -121,7 +121,7 @@
         android:background="@color/taskGridBackgroundColor"
         android:paddingStart="@dimen/ksz_starz_grid_spacing"
         android:paddingEnd="@dimen/ksz_starz_grid_spacing"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/claim_starz_framelayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/DetailsLinearLayout">
@@ -132,6 +132,30 @@
             android:layout_height="wrap_content" />
 
     </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/claim_starz_framelayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/claim_starz"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_50"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin_60"
+            android:layout_marginTop="@dimen/margin_30"
+            android:layout_marginEnd="@dimen/margin_60"
+            android:layout_marginBottom="@dimen/margin_30"
+            android:background="@drawable/ksz_button_background"
+            android:text="@string/ksz_claim_starz"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_25"></androidx.appcompat.widget.AppCompatButton>
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
