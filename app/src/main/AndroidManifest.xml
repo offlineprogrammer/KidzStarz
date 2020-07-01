@@ -11,6 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KidzStarz.Autumn">
         <activity
+            android:name=".ClaimStarzActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".DetailsActivity" />
+        <activity
             android:name=".DetailsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity" />

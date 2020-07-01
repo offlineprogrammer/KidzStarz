@@ -1,7 +1,10 @@
 package com.offlineprogrammer.kidzstarz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,7 +63,19 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         }
 
         setupRecyclerView();
+        configClaimStarzButton();
 
+    }
+
+    private void configClaimStarzButton() {
+        Button claim_starz = findViewById(R.id.claim_starz);
+        claim_starz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mIntent = new Intent(DetailsActivity.this, ClaimStarzActivity.class);
+                startActivityForResult(mIntent, 3);
+            }
+        });
     }
 
     private void getkidStarz() {

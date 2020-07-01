@@ -32,6 +32,11 @@
     <string name="star_count_error">we need a number</string>
     <string name="ksz_starz_list">Starz List</string>
     <string name="ksz_claim_starz">Claim Starz</string>
+    <string name="ksz_enter_starz_being_claimed">How many starz?</string>
+    <string name="ksz_hint_claimedstarz_count">Claimed Starz Count</string>
+    <string name="capture_this_moment">Capture this moment</string>
+    <string name="ksz_hint_claimedstarz_desc">Tell us about it</string>
+    <string name="ksz_button_claim">Claim</string>
 
     <!--<string name="plan_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="kid_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>

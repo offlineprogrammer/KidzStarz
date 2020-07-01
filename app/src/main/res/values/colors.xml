@@ -20,5 +20,7 @@
     <color name="round_red">#F44336</color>
     <color name="dark_grey">#acacac</color>
     <color name="background">#f3f3f3</color>
+    <color name="subtitle_black">#131415</color>
+    <color name="light_grey">#d6d6d6</color>
 
 </resources>
