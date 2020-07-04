@@ -120,7 +120,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
         if (ImagePicker.shouldHandle(i, i2, intent)) {
             Image firstImageOrNull = ImagePicker.getFirstImageOrNull(intent);
             if (firstImageOrNull != null) {
-                UCrop.of(Uri.fromFile(new File(firstImageOrNull.getPath())), Uri.fromFile(new File(getCacheDir(), "cropped"))).withAspectRatio(1.0f, 1.0f).start(this);
+                UCrop.of(Uri.fromFile(new File(firstImageOrNull.getPath())), Uri.fromFile(new File(getCacheDir(), "cropped"))).start(this);
 
                 //   Uri destinationUri = Uri.fromFile(new File(myContext.getCacheDir(), "IMG_" + System.currentTimeMillis()));
                 //   UCrop.of(sourceUri, destinationUri)
