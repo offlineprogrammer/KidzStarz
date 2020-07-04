@@ -38,6 +38,9 @@
     <string name="ksz_hint_claimedstarz_desc">Tell us about it</string>
     <string name="ksz_button_claim">Claim</string>
 
+    <string name="some_fields_are_empty">Some fields are empty</string>
+    <string name="maximum_redeem_point">Maximum point can be redeemed is</string>
+
     <!--<string name="plan_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="kid_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="main_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>

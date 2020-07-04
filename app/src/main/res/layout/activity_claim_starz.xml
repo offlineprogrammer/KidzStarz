@@ -221,11 +221,32 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/claimedstarz_warn_LinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/claimedstarz_desc_LinearLayout">
+
+            <TextView
+                android:id="@+id/warn_text"
+                style="@style/warnText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
         <FrameLayout
             android:id="@+id/save_claimedstarz_framelayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/claimedstarz_desc_LinearLayout">
+            app:layout_constraintTop_toBottomOf="@id/claimedstarz_warn_LinearLayout">
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -235,7 +256,7 @@
                 android:layout_height="@dimen/margin_50"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/margin_60"
-                android:layout_marginTop="@dimen/margin_30"
+                android:layout_marginTop="@dimen/margin_20"
                 android:layout_marginEnd="@dimen/margin_60"
                 android:layout_marginBottom="@dimen/margin_30"
                 android:background="@drawable/ksz_button_background"

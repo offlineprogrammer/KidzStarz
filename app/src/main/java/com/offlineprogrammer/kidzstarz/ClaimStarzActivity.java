@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
+import com.google.android.material.textfield.TextInputLayout;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.yalantis.ucrop.UCrop;
 
@@ -39,6 +41,10 @@ public class ClaimStarzActivity extends AppCompatActivity {
     private ImageView claimed_starz_ImageView;
     private ImageView claimed_starz_edit_ImageView;
     private TextView camera_button;
+    private Button save_claim_starz;
+    private TextInputLayout claimedstarz_desc_text_input;
+    private TextInputLayout claimedstarz_count_text_input;
+    private TextView warnText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,10 @@ public class ClaimStarzActivity extends AppCompatActivity {
         claimed_starz_ImageView = findViewById(R.id.claimed_starz_ImageView);
         claimed_starz_edit_ImageView = findViewById(R.id.claimed_starz_edit_ImageView);
         camera_button = findViewById(R.id.camera_button);
+        save_claim_starz = findViewById(R.id.save_claim_starz);
+        claimedstarz_desc_text_input = findViewById(R.id.claimedstarz_desc_text_input);
+        claimedstarz_count_text_input = findViewById(R.id.claimedstarz_count_text_input);
+        warnText = findViewById(R.id.warn_text);
 
         if (getIntent().getExtras() != null) {
             selectedKid = getIntent().getExtras().getParcelable("selected_kid");
@@ -64,11 +74,11 @@ public class ClaimStarzActivity extends AppCompatActivity {
 
         }
 
-        configCameraButton();
+        configButtons();
 
     }
 
-    private void configCameraButton() {
+    private void configButtons() {
 
         camera_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +95,36 @@ public class ClaimStarzActivity extends AppCompatActivity {
                         .folderMode(true).includeVideo(false).limit(1).theme(R.style.AppTheme_NoActionBar).single().start();
             }
         });
+
+        save_claim_starz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                savedClaimedStarz();
+            }
+        });
+    }
+
+    private void savedClaimedStarz() {
+        String trim = this.claimedstarz_desc_text_input.getEditText().getText().toString().trim();
+        String trim2 = this.claimedstarz_count_text_input.getEditText().getText().toString().trim();
+        if (trim.isEmpty() || trim2.isEmpty()) {
+            this.warnText.setText(R.string.some_fields_are_empty);
+            this.warnText.setVisibility(View.VISIBLE);
+            return;
+        }
+        this.warnText.setVisibility(View.INVISIBLE);
+        int intValue = Integer.valueOf(trim2).intValue();
+        if (intValue > selectedKid.getTotalStarz()) {
+            this.warnText.setVisibility(View.VISIBLE);
+            this.warnText.setText(String.format("%s %s", getString(R.string.maximum_redeem_point), String.valueOf(selectedKid.getTotalStarz() < 0 ? 0 : selectedKid.getTotalStarz())));
+            return;
+        }
+        //   Database.addPoint(this.child.getName(), intValue, Constants.REDEEM, trim, this.image);
+        //   Child child2 = this.child;
+        //   Database.updateTotalPoint(child2, child2.getTotalPoints() - intValue);
+        //   Child child3 = this.child;
+        //   Database.updateRedeemPoint(child3, child3.getRedeemPoints() + intValue);
+        //   ((DetailActivity) this.context).gotoSharePage(this.image, trim2, trim, this.child);
     }
 
     public void onRequestPermissionsResult(int i, @NonNull String[] strArr, @NonNull int[] iArr) {
