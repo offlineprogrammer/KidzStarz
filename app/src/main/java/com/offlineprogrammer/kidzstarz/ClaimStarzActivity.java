@@ -37,6 +37,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
     private TextView happy_starz;
     private String imagePath;
     private ImageView claimed_starz_ImageView;
+    private ImageView claimed_starz_edit_ImageView;
     private TextView camera_button;
 
     @Override
@@ -49,6 +50,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
         sad_starz = findViewById(R.id.sad_starz);
         happy_starz = findViewById(R.id.happy_starz);
         claimed_starz_ImageView = findViewById(R.id.claimed_starz_ImageView);
+        claimed_starz_edit_ImageView = findViewById(R.id.claimed_starz_edit_ImageView);
         camera_button = findViewById(R.id.camera_button);
 
         if (getIntent().getExtras() != null) {
@@ -69,6 +71,14 @@ public class ClaimStarzActivity extends AppCompatActivity {
     private void configCameraButton() {
 
         camera_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImagePicker.create(ClaimStarzActivity.this).returnMode(ReturnMode.ALL)
+                        .folderMode(true).includeVideo(false).limit(1).theme(R.style.AppTheme_NoActionBar).single().start();
+            }
+        });
+
+        claimed_starz_edit_ImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ImagePicker.create(ClaimStarzActivity.this).returnMode(ReturnMode.ALL)
@@ -101,6 +111,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
         this.camera_button.setVisibility(View.GONE);
         // this.editButton.setVisibility(0);
         this.claimed_starz_ImageView.setVisibility(View.VISIBLE);
+        this.claimed_starz_edit_ImageView.setVisibility(View.VISIBLE);
         // this.image = BitmapFactory.decodeFile(this.imagePath);
     }
 
