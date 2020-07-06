@@ -261,4 +261,60 @@ public class FirebaseHelper {
                     });
         });
     }
+
+    private Kid findKidByUUID(String sKidUUID) {
+
+        return kidzStarz.getUser().getKidz().stream().filter(
+                oKid -> sKidUUID.equals(oKid.getKidUUID())).findFirst().orElse(null);
+
+
+    }
+
+    public Completable updateSelectedKidStarz(Starz createdStarz, Kid sKid) {
+        return Completable.create(emitter -> {
+
+
+            int position = kidzStarz.getUser().getKidz().indexOf(findKidByUUID(sKid.getKidUUID()));
+
+            Kid selectedKid = kidzStarz.getUser().getKidz().get(position);
+
+            int totalStarzCount = selectedKid.getTotalStarz();
+            int newStarzCount = 0;
+            if (createdStarz.getType().equals(Constants.HAPPY)) {
+                totalStarzCount = totalStarzCount + createdStarz.getCount();
+                newStarzCount = selectedKid.getHappyStarz() + createdStarz.getCount();
+                selectedKid.setTotalStarz(totalStarzCount);
+                selectedKid.setHappyStarz(newStarzCount);
+            } else {
+                totalStarzCount = totalStarzCount - createdStarz.getCount();
+                newStarzCount = selectedKid.getSadStarz() + createdStarz.getCount();
+                selectedKid.setTotalStarz(totalStarzCount);
+                if (createdStarz.getType().equals(Constants.SAD)) {
+                    selectedKid.setSadStarz(newStarzCount);
+                }
+                if (createdStarz.getType().equals(Constants.CLAIMED)) {
+                    selectedKid.setClaimedStarz(newStarzCount);
+                }
+            }
+
+            kidzStarz.getUser().getKidz().set(position, selectedKid);
+
+            DocumentReference newKidRef = m_db.collection("users").document(kidzStarz.getUser().getUserId());//.collection("kidz").document();
+            newKidRef.update("kidz", kidzStarz.getUser().getKidz())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Add Kid", "DocumentSnapshot successfully written!");
+                            emitter.onComplete();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("Add Kid", "Error writing document", e);
+                            emitter.onError(e);
+                        }
+                    });
+        });
+    }
 }

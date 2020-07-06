@@ -18,7 +18,7 @@ public class Kid implements Parcelable {
     private Date createdDate;
     private int happyStarz;
     private int sadStarz;
-    private int redeemedStarz;
+    private int claimedStarz;
     private int totalStarz;
     private String kidUUID;
 
@@ -148,11 +148,11 @@ public class Kid implements Parcelable {
         this.totalStarz = totalStarz;
     }
 
-    public int getRedeemedStarz() {
-        return redeemedStarz;
+    public int getClaimedStarz() {
+        return claimedStarz;
     }
 
-    public void setRedeemedStarz(int redeemedStarz) {
-        this.redeemedStarz = redeemedStarz;
+    public void setClaimedStarz(int claimedStarz) {
+        this.claimedStarz = claimedStarz;
     }
 }

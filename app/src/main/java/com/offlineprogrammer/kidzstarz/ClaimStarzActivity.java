@@ -3,6 +3,7 @@ package com.offlineprogrammer.kidzstarz;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,11 +18,15 @@ import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 import com.google.android.material.textfield.TextInputLayout;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
+import com.offlineprogrammer.kidzstarz.starz.Starz;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -116,9 +121,59 @@ public class ClaimStarzActivity extends AppCompatActivity {
         int intValue = Integer.valueOf(trim2).intValue();
         if (intValue > selectedKid.getTotalStarz()) {
             this.warnText.setVisibility(View.VISIBLE);
-            this.warnText.setText(String.format("%s %s", getString(R.string.maximum_redeem_point), String.valueOf(selectedKid.getTotalStarz() < 0 ? 0 : selectedKid.getTotalStarz())));
+            this.warnText.setText(String.format("%s %s", getString(R.string.maximum_redeem_point), selectedKid.getTotalStarz() < 0 ? 0 : selectedKid.getTotalStarz()));
             return;
         }
+
+        Starz claimedStarz = new Starz(selectedKid.getKidUUID(),
+                trim,
+                intValue,
+                Constants.CLAIMED);
+
+
+        firebaseHelper.saveStarz(claimedStarz).observeOn(Schedulers.io())
+                //.observeOn(Schedulers.m)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Starz>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                        //    disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(Starz createdStarz) {
+                        Log.d(TAG, "onNext: " + createdStarz.getCount());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                firebaseHelper.logEvent("starz_created");
+                                //dismissProgressBar();
+                                firebaseHelper.updateSelectedKidStarz(createdStarz, selectedKid)
+                                        .subscribe(() -> {
+                                            Log.i(TAG, "updateKidzCollection: completed");
+                                            //   dismissProgressBar();
+                                        }, throwable -> {
+                                            // handle error
+                                        });
+
+                            }
+                        });
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
+
         //   Database.addPoint(this.child.getName(), intValue, Constants.REDEEM, trim, this.image);
         //   Child child2 = this.child;
         //   Database.updateTotalPoint(child2, child2.getTotalPoints() - intValue);

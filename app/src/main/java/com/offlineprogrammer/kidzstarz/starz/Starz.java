@@ -9,6 +9,7 @@ public class Starz {
     private String desc;
     private Integer count;
     private String type;
+    private String firestoreImageUri;
 
 
     public Starz(String kidUUID, String desc, Integer count, String type) {
@@ -61,5 +62,13 @@ public class Starz {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getFirestoreImageUri() {
+        return firestoreImageUri;
+    }
+
+    public void setFirestoreImageUri(String firestoreImageUri) {
+        this.firestoreImageUri = firestoreImageUri;
     }
 }
