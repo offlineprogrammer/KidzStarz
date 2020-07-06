@@ -277,7 +277,11 @@ public class ClaimStarzActivity extends AppCompatActivity {
                             Log.d(TAG, "onComplete");
                         }
                     });
+        } else {
+            savedClaimedStarz(null);
+
         }
+
     }
 
 }
