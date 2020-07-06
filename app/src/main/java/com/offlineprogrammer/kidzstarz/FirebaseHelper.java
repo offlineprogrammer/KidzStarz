@@ -287,12 +287,13 @@ public class FirebaseHelper {
                 selectedKid.setHappyStarz(newStarzCount);
             } else {
                 totalStarzCount = totalStarzCount - createdStarz.getCount();
-                newStarzCount = selectedKid.getSadStarz() + createdStarz.getCount();
                 selectedKid.setTotalStarz(totalStarzCount);
                 if (createdStarz.getType().equals(Constants.SAD)) {
+                    newStarzCount = selectedKid.getSadStarz() + createdStarz.getCount();
                     selectedKid.setSadStarz(newStarzCount);
                 }
                 if (createdStarz.getType().equals(Constants.CLAIMED)) {
+                    newStarzCount = selectedKid.getClaimedStarz() + createdStarz.getCount();
                     selectedKid.setClaimedStarz(newStarzCount);
                 }
             }
