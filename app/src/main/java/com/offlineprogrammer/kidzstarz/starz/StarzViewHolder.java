@@ -1,6 +1,7 @@
 package com.offlineprogrammer.kidzstarz.starz;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.offlineprogrammer.kidzstarz.Constants;
+import com.offlineprogrammer.kidzstarz.GlideApp;
 import com.offlineprogrammer.kidzstarz.R;
 
 public class StarzViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -41,6 +43,19 @@ public class StarzViewHolder extends RecyclerView.ViewHolder implements View.OnC
         }
         if (viewModel.getType().equals(Constants.SAD)) {
             starz_type_ImageView.setImageResource(R.drawable.sadstar);
+        }
+        if (viewModel.getType().equals(Constants.CLAIMED)) {
+
+            if (viewModel.getFirestoreImageUri() == null) {
+                starz_type_ImageView.setImageResource(R.drawable.lovestar);
+            } else {
+
+                GlideApp.with(mContext)
+                        .load(Uri.parse(viewModel.getFirestoreImageUri()))
+                        .placeholder(R.drawable.lovestar)
+                        .into(starz_type_ImageView);
+            }
+
         }
 
     }
