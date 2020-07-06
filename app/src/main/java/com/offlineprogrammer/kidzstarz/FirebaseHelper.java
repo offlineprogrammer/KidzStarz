@@ -1,10 +1,12 @@
 package com.offlineprogrammer.kidzstarz;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +23,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.offlineprogrammer.kidzstarz.starz.Starz;
 import com.offlineprogrammer.kidzstarz.user.User;
@@ -29,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -272,12 +278,8 @@ public class FirebaseHelper {
 
     public Completable updateSelectedKidStarz(Starz createdStarz, Kid sKid) {
         return Completable.create(emitter -> {
-
-
             int position = kidzStarz.getUser().getKidz().indexOf(findKidByUUID(sKid.getKidUUID()));
-
             Kid selectedKid = kidzStarz.getUser().getKidz().get(position);
-
             int totalStarzCount = selectedKid.getTotalStarz();
             int newStarzCount = 0;
             if (createdStarz.getType().equals(Constants.HAPPY)) {
@@ -317,5 +319,45 @@ public class FirebaseHelper {
                         }
                     });
         });
+    }
+
+    public Observable<Uri> uploadImage(Kid selectedKid, Uri imagePath) {
+        return Observable.create((ObservableEmitter<Uri> emitter) -> {
+
+            FirebaseStorage storage;
+            StorageReference storageReference;
+            storage = FirebaseStorage.getInstance();
+            storageReference = storage.getReference();
+
+            final StorageReference ref
+                    = storageReference
+                    .child("images/" + selectedKid.getKidUUID() + "/"
+                            + Calendar.getInstance().getTime().toString() + "/"
+                            + UUID.randomUUID().toString());
+
+            ref.putFile(imagePath).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        //String downloadURL = downloadUri.toString();
+                        emitter.onNext(downloadUri);
+
+                    } else {
+                        emitter.onError(task.getException());
+                    }
+                }
+            });
+        });
+
     }
 }

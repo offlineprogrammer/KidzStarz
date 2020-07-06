@@ -1,5 +1,6 @@
 package com.offlineprogrammer.kidzstarz;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
     private ImageView kidMonsterImageView;
     private TextView sad_starz;
     private TextView happy_starz;
-    private String imagePath;
+    ProgressDialog progressDialog;
     private ImageView claimed_starz_ImageView;
     private ImageView claimed_starz_edit_ImageView;
     private TextView camera_button;
@@ -50,6 +51,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
     private TextInputLayout claimedstarz_desc_text_input;
     private TextInputLayout claimedstarz_count_text_input;
     private TextView warnText;
+    private Uri imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,12 +106,14 @@ public class ClaimStarzActivity extends AppCompatActivity {
         save_claim_starz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                savedClaimedStarz();
+
+                uploadImage();
+
             }
         });
     }
 
-    private void savedClaimedStarz() {
+    private void savedClaimedStarz(String s) {
         String trim = this.claimedstarz_desc_text_input.getEditText().getText().toString().trim();
         String trim2 = this.claimedstarz_count_text_input.getEditText().getText().toString().trim();
         if (trim.isEmpty() || trim2.isEmpty()) {
@@ -125,12 +129,21 @@ public class ClaimStarzActivity extends AppCompatActivity {
             return;
         }
 
+
         Starz claimedStarz = new Starz(selectedKid.getKidUUID(),
                 trim,
                 intValue,
                 Constants.CLAIMED);
 
+        claimedStarz.setFirestoreImageUri(s);
 
+
+        saveClaimedStarz(claimedStarz);
+
+
+    }
+
+    private void saveClaimedStarz(Starz claimedStarz) {
         firebaseHelper.saveStarz(claimedStarz).observeOn(Schedulers.io())
                 //.observeOn(Schedulers.m)
                 .subscribeOn(Schedulers.io())
@@ -173,13 +186,6 @@ public class ClaimStarzActivity extends AppCompatActivity {
                         Log.d(TAG, "onComplete");
                     }
                 });
-
-        //   Database.addPoint(this.child.getName(), intValue, Constants.REDEEM, trim, this.image);
-        //   Child child2 = this.child;
-        //   Database.updateTotalPoint(child2, child2.getTotalPoints() - intValue);
-        //   Child child3 = this.child;
-        //   Database.updateRedeemPoint(child3, child3.getRedeemPoints() + intValue);
-        //   ((DetailActivity) this.context).gotoSharePage(this.image, trim2, trim, this.child);
     }
 
     public void onRequestPermissionsResult(int i, @NonNull String[] strArr, @NonNull int[] iArr) {
@@ -200,9 +206,8 @@ public class ClaimStarzActivity extends AppCompatActivity {
     }
 
     public void onCropFinish(Intent intent) {
-        Uri output = UCrop.getOutput(intent);
-        this.imagePath = output.getPath();
-        GlideApp.with(this).load(output.getPath()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).centerCrop().into(this.claimed_starz_ImageView);
+        this.imagePath = UCrop.getOutput(intent);
+        GlideApp.with(this).load(this.imagePath.getPath()).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).centerCrop().into(this.claimed_starz_ImageView);
         this.camera_button.setVisibility(View.GONE);
         // this.editButton.setVisibility(0);
         this.claimed_starz_ImageView.setVisibility(View.VISIBLE);
@@ -227,6 +232,51 @@ public class ClaimStarzActivity extends AppCompatActivity {
 
         if (i == UCrop.REQUEST_CROP) {
             onCropFinish(intent);
+        }
+    }
+
+    private void uploadImage() {
+        if (this.imagePath != null) {
+            // Code for showing progressDialog while uploading
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            firebaseHelper.uploadImage(selectedKid, this.imagePath).observeOn(Schedulers.io())
+                    //.observeOn(Schedulers.m)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<Uri>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            Log.d(TAG, "onSubscribe");
+                            //    disposable = d;
+                        }
+
+                        @Override
+                        public void onNext(Uri downloadUri) {
+                            Log.d(TAG, "onNext: " + downloadUri.toString());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    firebaseHelper.logEvent("starz_created");
+                                    savedClaimedStarz(downloadUri.toString());
+                                    progressDialog.dismiss();
+                                }
+                            });
+
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, "onError: " + e.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Log.d(TAG, "onComplete");
+                        }
+                    });
         }
     }
 
