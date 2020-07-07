@@ -9,4 +9,6 @@ public interface OnKidListener {
     void showAddSadStarzDialog(int adapterPosition);
 
     void showMoreInfo(int adapterPosition);
+
+    void deleteKid(int adapterPosition);
 }

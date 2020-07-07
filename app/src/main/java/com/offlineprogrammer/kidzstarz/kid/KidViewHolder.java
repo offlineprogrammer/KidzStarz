@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.offlineprogrammer.kidzstarz.R;
 
-public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class KidViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "KidViewHolder";
     private TextView kidNameTextView;
     private ImageView kidMonsterImageView;
@@ -21,6 +21,7 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
     private TextView happy_starz;
     private TextView total_starz_text;
     private ImageButton moreinfo_button;
+    ImageButton deleteImageButton;
 
     OnKidListener onKidListener;
     private Context mContext;
@@ -33,6 +34,7 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
         happy_button = itemView.findViewById(R.id.happy_button);
         sad_button = itemView.findViewById(R.id.sad_button);
         moreinfo_button = itemView.findViewById(R.id.moreinfo_button);
+        deleteImageButton = itemView.findViewById(R.id.delete_button);
 
         sad_starz = itemView.findViewById(R.id.sad_starz);
         happy_starz = itemView.findViewById(R.id.happy_starz);
@@ -62,6 +64,13 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
             }
         });
 
+        deleteImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onKidListener.deleteKid(getAdapterPosition());
+            }
+        });
+
     }
 
 
@@ -76,13 +85,6 @@ public class KidViewHolder extends RecyclerView.ViewHolder implements View.OnCli
                 mContext.getPackageName()));
     }
 
-    @Override
-    public void onClick(View v) {
-        onKidListener.onKidClick(getAdapterPosition());
-        onKidListener.showAddHappyStarzDialog(getAdapterPosition());
-        onKidListener.showAddSadStarzDialog(getAdapterPosition());
 
-
-    }
 }
 

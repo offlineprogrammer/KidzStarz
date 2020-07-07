@@ -330,6 +330,43 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     }
 
     @Override
+    public void deleteKid(int position) {
+        Log.i(TAG, "deleteKid: Clicked " + position);
+        Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
+        final AlertDialog builder = new AlertDialog.Builder(MainActivity.this).create();
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_dialog_delete_kid, null);
+        Button okBtn = dialogView.findViewById(R.id.deletekid_confirm_button);
+        Button cancelBtn = dialogView.findViewById(R.id.deletekid_cancel_button);
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                builder.dismiss();
+                deleteKid(selectedKid);
+                // mFirebaseAnalytics.logEvent("kid_deleted", null);
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
+        builder.setView(dialogView);
+        builder.show();
+    }
+
+    private void deleteKid(Kid theSelectedKid) {
+        firebaseHelper.deleteKid(theSelectedKid)
+                .subscribe(() -> {
+                    Log.i(TAG, "updateRewardImage: completed");
+                    firebaseHelper.logEvent("kid_deleted");
+                    finish();
+                }, throwable -> {
+                    // handle error
+                });
+    }
+
+    @Override
     public void showMoreInfo(int position) {
         Log.i(TAG, "showMoreInfo: Clicked " + position);
         Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
