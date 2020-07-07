@@ -36,15 +36,18 @@ public class StarzViewHolder extends RecyclerView.ViewHolder implements View.OnC
     public void bindData(final Starz viewModel) {
         String strDateFormat = "MMM dd, hh:mm a";
         starz_desc_TextView.setText(viewModel.getDesc());
-        starz_count_TextView.setText(viewModel.getCount().toString());
+
         starz_datecreated_TextView.setText(DateFormat.format(strDateFormat, viewModel.getCreatedDate()));//.setText(viewModel.getCreatedDate().toString());
         if (viewModel.getType().equals(Constants.HAPPY)) {
+            starz_count_TextView.setText(String.format("+ %d", viewModel.getCount()));
             starz_type_ImageView.setImageResource(R.drawable.happystar);
         }
         if (viewModel.getType().equals(Constants.SAD)) {
+            starz_count_TextView.setText(String.format("- %d", viewModel.getCount()));
             starz_type_ImageView.setImageResource(R.drawable.sadstar);
         }
         if (viewModel.getType().equals(Constants.CLAIMED)) {
+            starz_count_TextView.setText(String.format("- %d", viewModel.getCount()));
 
             if (viewModel.getFirestoreImageUri() == null) {
                 starz_type_ImageView.setImageResource(R.drawable.lovestar);
