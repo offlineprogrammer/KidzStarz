@@ -374,7 +374,15 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                 .subscribe(() -> {
                     Log.i(TAG, "updateRewardImage: completed");
                     firebaseHelper.logEvent("kid_deleted");
-                    finish();
+                    firebaseHelper.deleteKidStarzCollection(theSelectedKid)
+                            .subscribe(() -> {
+                                Log.i(TAG, "updateRewardImage: completed");
+                                firebaseHelper.logEvent("kid_deleted");
+                                finish();
+                            }, throwable -> {
+                                // handle error
+                            });
+
                 }, throwable -> {
                     // handle error
                 });
