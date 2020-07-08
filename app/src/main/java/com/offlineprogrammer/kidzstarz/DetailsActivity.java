@@ -1,8 +1,10 @@
 package com.offlineprogrammer.kidzstarz;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -66,6 +68,31 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         configClaimStarzButton();
 
     }
+
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed Called");
+        goBack();
+    }
+
+    private void goBack() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", "result");
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                goBack();
+                break;
+        }
+        return true;
+    }
+
 
     private void configClaimStarzButton() {
         Button claim_starz = findViewById(R.id.claim_starz);

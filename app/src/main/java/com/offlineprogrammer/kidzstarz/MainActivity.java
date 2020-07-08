@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     private ArrayList<Kid> kidzList = new ArrayList<>();
     ViewPager2 view_pager;
     private LinearLayout container;
+    private int recentPosition;
 
 
 
@@ -64,6 +66,17 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         container = findViewById(R.id.indicator_container);
         populateIndicator();
         setIndicator(0);
+    }
+
+    public void onActivityResult(int i, int i2, @Nullable Intent intent) {
+        super.onActivityResult(i, i2, intent);
+        if (i == 500) {
+            int kidzSize = firebaseHelper.kidzStarz.getUser().getKidz().size() - 1;
+            int i4 = this.recentPosition;
+            if (kidzSize >= i4) {
+                this.view_pager.setCurrentItem(i4);
+            }
+        }
     }
 
     private void populateIndicator() {
@@ -106,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                 super.onPageSelected(position);
                 Log.d(TAG, "onPageSelected: position " + position);
                 setIndicator(position);
+                recentPosition = position;
                 if (!(firebaseHelper.kidzStarz.getUser().getKidz().get(position).getKidName() == null)) {
                     setTitle(position);
                 }
@@ -372,7 +386,10 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("selected_kid", selectedKid);
-        startActivity(intent);
+        int currentItem = this.view_pager.getCurrentItem();
+        this.recentPosition = currentItem;
+        startActivityForResult(intent, 500);
+        // startActivity(intent);
     }
 
 
