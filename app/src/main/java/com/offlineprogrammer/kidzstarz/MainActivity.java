@@ -417,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                     Starz happyStarz = new Starz(selectedKid.getKidUUID(), happyStarDesc, Integer.valueOf(happyStarCount.trim()).intValue(), Constants.HAPPY);
                     setupProgressBar();
                     saveStarz(happyStarz, position);
-//                    updateKidStarz(selectedKid,happyStarz);
+
                     builder.dismiss();
                 }
 
@@ -453,22 +453,9 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                     @Override
                     public void onNext(Starz createdStarz) {
                         Log.d(TAG, "onNext: " + createdStarz.getCount());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                firebaseHelper.logEvent("starz_created");
-                                //dismissProgressBar();
-                                firebaseHelper.updateKidStarz(createdStarz, position)
-                                        .subscribe(() -> {
-                                            Log.i(TAG, "updateKidzCollection: completed");
-                                            dismissProgressBar();
-                                        }, throwable -> {
-                                            // handle error
-                                        });
-
-                            }
-                        });
-
+                        firebaseHelper.logEvent("starz_created");
+                        //dismissProgressBar();
+                        updateKidStarz(createdStarz, position);
 
 
                     }
@@ -484,6 +471,17 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                     }
                 });
 
+    }
+
+    private void updateKidStarz(Starz createdStarz, int position) {
+        firebaseHelper.updateKidStarz(createdStarz, position)
+                .subscribe(() -> {
+                    Log.i(TAG, "updateKidzCollection: completed");
+
+
+                }, throwable -> {
+                    // handle error
+                });
     }
 
     private void showAddSadStarzDialog(Context c, int position) {
