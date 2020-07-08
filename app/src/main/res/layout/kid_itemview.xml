@@ -180,8 +180,8 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/moreinfo_button"
-        android:layout_width="@dimen/margin_80"
-        android:layout_height="@dimen/margin_80"
+        android:layout_width="@dimen/margin_60"
+        android:layout_height="@dimen/margin_60"
         android:layout_gravity="center"
         android:background="@drawable/round_yellow"
         android:contentDescription="@null"

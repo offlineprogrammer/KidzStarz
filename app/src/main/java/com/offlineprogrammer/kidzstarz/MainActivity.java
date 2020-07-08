@@ -22,6 +22,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.offlineprogrammer.kidzstarz.kid.KidAdapter;
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     ViewPager2 view_pager;
     private LinearLayout container;
     private int recentPosition;
+    private com.google.android.gms.ads.AdView adView;
 
 
 
@@ -66,6 +71,18 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         container = findViewById(R.id.indicator_container);
         populateIndicator();
         setIndicator(0);
+        setupAds();
+    }
+
+    private void setupAds() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        adView = findViewById(R.id.ad_view);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     public void onActivityResult(int i, int i2, @Nullable Intent intent) {
@@ -305,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         }
     }
 
-    private int pickMonster(){
+    private int pickMonster() {
         final TypedArray imgs;
         imgs = getResources().obtainTypedArray(R.array.kidzMonsters);
         final Random rand = new Random();
@@ -314,12 +331,37 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     }
 
 
-    /** Called before the activity is destroyed */
+    /**
+     * Called when leaving the activity
+     */
+    @Override
+    public void onPause() {
+        if (adView != null) {
+            adView.pause();
+        }
+        super.onPause();
+    }
+
+    /**
+     * Called when returning to the activity
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adView != null) {
+            adView.resume();
+        }
+    }
+
+
+    /**
+     * Called before the activity is destroyed
+     */
     @Override
     public void onDestroy() {
-       /* if (adView != null) {
+        if (adView != null) {
             adView.destroy();
-        }*/
+        }
         dismissWithCheck(progressBar);
         super.onDestroy();
     }
@@ -376,8 +418,6 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                     firebaseHelper.logEvent("kid_deleted");
                     firebaseHelper.deleteKidStarzCollection(theSelectedKid)
                             .subscribe(() -> {
-                                Log.i(TAG, "updateRewardImage: completed");
-                                firebaseHelper.logEvent("kid_deleted");
                                 finish();
                             }, throwable -> {
                                 // handle error
@@ -461,7 +501,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                     @Override
                     public void onNext(Starz createdStarz) {
                         Log.d(TAG, "onNext: " + createdStarz.getCount());
-                        firebaseHelper.logEvent("starz_created");
+                        firebaseHelper.logEvent("starz_created_" + createdStarz.getType());
                         //dismissProgressBar();
                         updateKidStarz(createdStarz, position);
 

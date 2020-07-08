@@ -160,7 +160,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                firebaseHelper.logEvent("starz_created");
+                                firebaseHelper.logEvent("starz_claimed");
                                 //dismissProgressBar();
                                 firebaseHelper.updateSelectedKidStarz(createdStarz, selectedKid)
                                         .subscribe(() -> {
@@ -258,7 +258,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    firebaseHelper.logEvent("starz_created");
+                                    firebaseHelper.logEvent("image_uploaded");
                                     savedClaimedStarz(downloadUri.toString());
                                     progressDialog.dismiss();
                                 }

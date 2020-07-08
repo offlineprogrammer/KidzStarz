@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
     <androidx.viewpager2.widget.ViewPager2
@@ -18,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_5"
-        android:layout_marginBottom="@dimen/margin_10"
         app:layout_constraintBottom_toTopOf="@id/add_kid_framelayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -40,13 +40,25 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_50"
         android:layout_marginTop="@dimen/margin_30"
-        android:layout_marginBottom="@dimen/margin_30"
+        android:layout_marginEnd="@dimen/margin_60"
         android:text="@string/ksz_add_kid"
         android:textAllCaps="false"
         android:layout_marginStart="@dimen/margin_60"
-        android:layout_marginEnd="@dimen/margin_60">
-    </androidx.appcompat.widget.AppCompatButton>
+        android:layout_marginBottom="@dimen/margin_50"></androidx.appcompat.widget.AppCompatButton>
     </FrameLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/ad_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/main_adMob_unit_id"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></com.google.android.gms.ads.AdView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

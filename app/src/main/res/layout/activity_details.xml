@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".DetailsActivity">
 
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -148,13 +149,26 @@
             android:layout_marginStart="@dimen/margin_60"
             android:layout_marginTop="@dimen/margin_30"
             android:layout_marginEnd="@dimen/margin_60"
-            android:layout_marginBottom="@dimen/margin_30"
+            android:layout_marginBottom="@dimen/margin_50"
             android:background="@drawable/ksz_button_background"
             android:text="@string/ksz_claim_starz"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_25"></androidx.appcompat.widget.AppCompatButton>
     </FrameLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/ad_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/details_adMob_unit_id"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></com.google.android.gms.ads.AdView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

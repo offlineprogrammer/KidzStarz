@@ -15,6 +15,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.offlineprogrammer.kidzstarz.starz.OnStarzListener;
 import com.offlineprogrammer.kidzstarz.starz.Starz;
@@ -40,6 +44,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
     private RecyclerView starzRecyclerView;
     private ArrayList<Starz> starzArrayList = new ArrayList<>();
     private Disposable disposable;
+    private com.google.android.gms.ads.AdView adView;
 
 
     @Override
@@ -67,6 +72,53 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         setupRecyclerView();
         configClaimStarzButton();
 
+        setupAds();
+
+    }
+
+    private void setupAds() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        adView = findViewById(R.id.ad_view);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+    }
+
+    /**
+     * Called when leaving the activity
+     */
+    @Override
+    public void onPause() {
+        if (adView != null) {
+            adView.pause();
+        }
+        super.onPause();
+    }
+
+    /**
+     * Called when returning to the activity
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adView != null) {
+            adView.resume();
+        }
+    }
+
+    /**
+     * Called before the activity is destroyed
+     */
+    @Override
+    public void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+//        dismissWithCheck(progressBar);
+        super.onDestroy();
     }
 
 

@@ -17,9 +17,8 @@
     <string name="deleteplan_cancel_button">No</string>
     <string name="deleteplan_confirm_button">Yes!</string>
     <string name="ksz_delete_plan">Are you sure you want to delete?</string>
-    <string name="plan_adMob_unit_id">ca-app-pub-7065714443867225/3470509679</string>
-    <string name="kid_adMob_unit_id">ca-app-pub-7065714443867225/9880005359</string>
-    <string name="main_adMob_unit_id">ca-app-pub-7065714443867225/8758495379</string>
+    <string name="main_adMob_unit_id">ca-app-pub-7065714443867225/4437512926</string>
+    <string name="details_adMob_unit_id">ca-app-pub-7065714443867225/5073412520</string>
     <string name="ksz_hint_happystar_desc">Well done!! What happened?</string>
     <string name="ksz_hint_happystar_count">Happy Starz Count</string>
     <string name="kks_button_cancel">Cancel</string>
@@ -39,7 +38,7 @@
     <string name="ksz_button_claim">Claim</string>
 
     <string name="some_fields_are_empty">Some fields are empty</string>
-    <string name="maximum_redeem_point">Maximum point can be redeemed is</string>
+    <string name="maximum_redeem_point">Maximum starz can be claimed is</string>
 
     <!--<string name="plan_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="kid_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
