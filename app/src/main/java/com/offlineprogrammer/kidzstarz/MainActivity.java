@@ -124,6 +124,15 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     }
 
 
+    private void updateViewPager() {
+        kidAdapter = null;
+        kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(), this);
+        view_pager = findViewById(R.id.view_pager);
+        view_pager.setAdapter(kidAdapter);
+
+    }
+
+
     private void setupViewPager() {
         kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(), this);
         view_pager = findViewById(R.id.view_pager);
@@ -525,6 +534,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         firebaseHelper.updateKidStarz(createdStarz, position)
                 .subscribe(() -> {
                     Log.i(TAG, "updateKidzCollection: completed");
+                    updateViewPager();
                     dismissProgressBar();
                 }, throwable -> {
                     // handle error
