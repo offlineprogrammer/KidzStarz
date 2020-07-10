@@ -525,8 +525,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         firebaseHelper.updateKidStarz(createdStarz, position)
                 .subscribe(() -> {
                     Log.i(TAG, "updateKidzCollection: completed");
-
-
+                    dismissProgressBar();
                 }, throwable -> {
                     // handle error
                 });
