@@ -251,7 +251,8 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                             @Override
                             public void run() {
                                 firebaseHelper.logEvent("kid_created");
-                                updateViewPager(kid);
+                                //updateViewPager(kid);
+                                updateViewPager();
                                 firebaseHelper.updateKidzCollection(kid)
                                         .subscribe(() -> {
                                             Log.i(TAG, "updateKidzCollection: completed");

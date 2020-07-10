@@ -125,7 +125,7 @@ public class FirebaseHelper {
 
     public Observable<Kid> saveKid(Kid newKid) {
         return Observable.create((ObservableEmitter<Kid> emitter) -> {
-            kidzStarz.getUser().getKidz().add(newKid);
+            kidzStarz.getUser().getKidz().add(0, newKid);
             DocumentReference newKidRef = m_db.collection("users").document(kidzStarz.getUser().getUserId());//.collection("kidz").document();
             newKidRef.update("kidz",kidzStarz.getUser().getKidz())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
