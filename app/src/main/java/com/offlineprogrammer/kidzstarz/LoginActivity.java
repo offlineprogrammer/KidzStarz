@@ -1,14 +1,14 @@
 package com.offlineprogrammer.kidzstarz;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 // Launch Sign In
+                mLogInProgress.setVisibility(View.VISIBLE);
                 signInToGoogle();
             }
         });
@@ -117,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                 //        showToastMessage("Google Sign in Succeeded");
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
+                mLogInProgress.setVisibility(View.GONE);
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
                 //      showToastMessage("Google Sign in Failed " + e);
@@ -138,10 +140,11 @@ public class LoginActivity extends AppCompatActivity {
 
                             Log.d(TAG, "signInWithCredential:success: currentUser: " + user.getEmail());
 
-                            //              showToastMessage("Firebase Authentication Succeeded ");
-                            saveUser();
+                            getUserData();
+
                         } else {
                             // If sign in fails, display a message to the user.
+                            mLogInProgress.setVisibility(View.GONE);
 
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
 
@@ -181,7 +184,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
+
                         Log.e(TAG, "onError: " + e.getMessage());
+                        saveUser();
                     }
 
                     @Override
