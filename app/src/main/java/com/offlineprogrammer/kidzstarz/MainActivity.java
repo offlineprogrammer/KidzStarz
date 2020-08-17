@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(), this);
         view_pager = findViewById(R.id.view_pager);
         view_pager.setAdapter(kidAdapter);
+        dismissProgressBar();
 
     }
 

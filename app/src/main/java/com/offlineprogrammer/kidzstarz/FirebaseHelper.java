@@ -112,6 +112,7 @@ public class FirebaseHelper {
 
                 } else {
                     Log.d(TAG, "Current data: null");
+                    emitter.onError(new Exception("No data found"));
                 }
             }
         });

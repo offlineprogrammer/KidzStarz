@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -143,6 +144,13 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
                 break;
         }
         return true;
+    }
+
+
+    public void onActivityResult(int i, int i2, @Nullable Intent intent) {
+        super.onActivityResult(i, i2, intent);
+        Log.i(TAG, "onActivityResult: We r back");
+        getkidStarz();
     }
 
 

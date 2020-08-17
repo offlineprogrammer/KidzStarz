@@ -1,5 +1,6 @@
 package com.offlineprogrammer.kidzstarz;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -165,6 +166,10 @@ public class ClaimStarzActivity extends AppCompatActivity {
                                 firebaseHelper.updateSelectedKidStarz(createdStarz, selectedKid)
                                         .subscribe(() -> {
                                             Log.i(TAG, "updateKidzCollection: completed");
+                                            Intent returnIntent = new Intent();
+                                            returnIntent.putExtra("result", "result");
+                                            setResult(Activity.RESULT_OK, returnIntent);
+                                            finish();
                                             //   dismissProgressBar();
                                         }, throwable -> {
                                             // handle error
