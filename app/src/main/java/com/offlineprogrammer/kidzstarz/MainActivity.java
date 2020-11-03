@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         add_kid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //throw new RuntimeException("Test Crash"); // Force a crash
                 showAddKidDialog(MainActivity.this);
             }
         });
