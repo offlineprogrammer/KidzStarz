@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "674147517853-brr3u1s5p40ifff54lnkb5t4543ije3g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.offlineprogrammer.kidzstarz",
+            "certificate_hash": "1187e9ce92fd6066debd15269367d5327304338a"
+          }
+        },
+        {
           "client_id": "674147517853-iejfd6knfrsnd6ranth7i927n9ea4m22.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
