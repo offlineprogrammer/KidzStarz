@@ -23,6 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,6 +41,7 @@ import java.util.UUID;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
+import timber.log.Timber;
 
 public class FirebaseHelper {
    // User m_User;
@@ -48,6 +51,7 @@ public class FirebaseHelper {
     private static final String TAG = "FirebaseHelper";
     Context mContext;
     KidzStarz kidzStarz;
+    public static final String USERS_COLLECTION = "users";
 
     public FirebaseHelper(Context c){
         m_db = FirebaseFirestore.getInstance();
@@ -64,6 +68,8 @@ public class FirebaseHelper {
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
            kidzStarz.setUser(new User(currentUser.getUid(),currentUser.getEmail(), currentTime));
+            kidzStarz.getUser().setFcmInstanceId(FirebaseInstanceId.getInstance().getToken());
+
 
             Map<String, Object> user = kidzStarz.getUser().toMap();
 
@@ -410,5 +416,60 @@ public class FirebaseHelper {
 
         });
     }
+
+
+    public Completable setUserFcmInstanceId() {
+        return Completable.create(emitter -> {
+
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                                emitter.onError(task.getException());
+                            }
+                            // Get new FCM registration token
+                            String token = task.getResult();
+                            kidzStarz.getUser().setFcmInstanceId(token);
+                            DocumentReference newKidRef = m_db.collection(USERS_COLLECTION).document(kidzStarz.getUser().getUserId());//.collection("kidz").document();
+                            newKidRef.update("fcmInstanceId", kidzStarz.getUser().getFcmInstanceId())
+                                    .addOnSuccessListener(aVoid -> {
+                                        Timber.d("fcmInstanceId successfully written!");
+                                        emitter.onComplete();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Timber.tag("Add Kid").w(e, "Error writing document");
+                                        emitter.onError(e);
+                                    });
+
+                        }
+                    });
+
+
+
+
+        });
+    }
+
+
+
+    public Completable updateUserFcmInstanceId(String token) {
+        return Completable.create(emitter -> {
+            kidzStarz.getUser().setFcmInstanceId(token);
+            DocumentReference newKidRef = m_db.collection(USERS_COLLECTION).document(kidzStarz.getUser().getUserId());//.collection("kidz").document();
+            newKidRef.update("fcmInstanceId", kidzStarz.getUser().getFcmInstanceId())
+                    .addOnSuccessListener(aVoid -> {
+                        Timber.d("fcmInstanceId successfully written!");
+                        emitter.onComplete();
+                    })
+                    .addOnFailureListener(e -> {
+                        Timber.tag("Add Kid").w(e, "Error writing document");
+                        emitter.onError(e);
+                    });
+
+        });
+    }
+
 
 }

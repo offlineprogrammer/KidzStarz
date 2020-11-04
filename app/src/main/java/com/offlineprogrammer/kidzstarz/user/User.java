@@ -14,6 +14,7 @@ public class User {
     private String userEmail;
     private Date dateCreated;
     private ArrayList<Kid> kidz = new ArrayList<>();
+    private String fcmInstanceId;
 
     public User(String userId, String userEmail, Date dateCreated) {
         this.userId = userId;
@@ -55,6 +56,7 @@ public class User {
         result.put("userId", this.userId);
         result.put("userEmail", this.userEmail);
         result.put("dateCreated", this.dateCreated);
+        result.put("fcmInstanceId", this.fcmInstanceId);
         result.put("kidz", this.kidz);
         return result;
     }
@@ -65,5 +67,13 @@ public class User {
 
     public void setKidz(ArrayList<Kid> kidz) {
         this.kidz = kidz;
+    }
+
+    public String getFcmInstanceId() {
+        return fcmInstanceId;
+    }
+
+    public void setFcmInstanceId(String fcmInstanceId) {
+        this.fcmInstanceId = fcmInstanceId;
     }
 }

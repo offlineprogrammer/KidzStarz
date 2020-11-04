@@ -27,6 +27,7 @@ import com.offlineprogrammer.kidzstarz.user.User;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -173,6 +174,14 @@ public class LoginActivity extends AppCompatActivity {
                     public void onNext(User user) {
                         Log.d(TAG, "onNext: " + user.getUserId());
                         Log.d(TAG, "onNext: m_User " + firebaseHelper.kidzStarz.getUser().getUserEmail());
+                        firebaseHelper.setUserFcmInstanceId()
+                                .subscribe(() -> {
+                                    Timber.i("setUserFcmInstanceId: completed");
+
+                                }, throwable -> {
+                                    // handle error
+                                });
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -211,6 +220,14 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onNext(User user) {
                         Log.d(TAG, "onNext: " + user.getUserId());
+                        firebaseHelper.setUserFcmInstanceId()
+                                .subscribe(() -> {
+                                    Timber.i("setUserFcmInstanceId: completed");
+
+                                }, throwable -> {
+                                    // handle error
+                                });
+                        
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
