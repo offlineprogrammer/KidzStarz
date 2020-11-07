@@ -40,6 +40,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,9 +56,7 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
     private Context context;
     private FirebaseHelper firebaseHelper;
 
-    private ImageView kidMonsterImageView;
-    private TextView sad_starz;
-    private TextView happy_starz;
+
     ProgressDialog progressDialog;
     private ImageView claimed_starz_ImageView;
     private ImageView claimed_starz_edit_ImageView;
@@ -120,9 +119,7 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
 
     private void initViews(View view) {
 
-        kidMonsterImageView = view.findViewById(R.id.kid_monster_name);
-        sad_starz = view.findViewById(R.id.sad_starz);
-        happy_starz = view.findViewById(R.id.happy_starz);
+
         claimed_starz_ImageView = view.findViewById(R.id.claimed_starz_ImageView);
         claimed_starz_edit_ImageView = view.findViewById(R.id.claimed_starz_edit_ImageView);
         camera_button = view.findViewById(R.id.camera_button);
@@ -136,30 +133,11 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
 
     private void configButtons() {
 
-        camera_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickImage();
-            }
-        });
+        camera_button.setOnClickListener(view -> pickImage());
 
-        claimed_starz_edit_ImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        claimed_starz_edit_ImageView.setOnClickListener(view -> pickImage());
 
-                pickImage();
-
-            }
-        });
-
-        save_claim_starz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                uploadImage();
-
-            }
-        });
+        save_claim_starz.setOnClickListener(view -> uploadImage());
     }
 
     private void pickImage() {
@@ -182,14 +160,7 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
         if (ImagePicker.shouldHandle(i, i2, intent)) {
             Image firstImageOrNull = ImagePicker.getFirstImageOrNull(intent);
             if (firstImageOrNull != null) {
-                //UCrop.of(Uri.fromFile(new File(firstImageOrNull.getPath())), Uri.fromFile(new File(getCacheDir(), "cropped"))).start(this);
-                UCrop.of(Uri.fromFile(new File(firstImageOrNull.getPath())), Uri.fromFile(new File(this.context.getCacheDir(), "cropped"))).withAspectRatio(1.0f, 1.0f).start((DetailsActivity)this.context);
-
-                //   Uri destinationUri = Uri.fromFile(new File(myContext.getCacheDir(), "IMG_" + System.currentTimeMillis()));
-                //   UCrop.of(sourceUri, destinationUri)
-                //           .withMaxResultSize(1080, 768) // any resolution you want
-                //           .start(mContext, YourFragment/YourActivity.this);
-
+                UCrop.of(Uri.fromFile(new File(firstImageOrNull.getPath())), Uri.fromFile(new File(this.context.getCacheDir(), "claimed"+ " " + System.currentTimeMillis() + ".jpg"))).withAspectRatio(1.0f, 1.0f).start((DetailsActivity)this.context);
             }
         }
 
@@ -212,40 +183,32 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
                     .subscribe(new Observer<Uri>() {
                         @Override
                         public void onSubscribe(Disposable d) {
-                            Log.d(TAG, "onSubscribe");
+                            Timber.d("onSubscribe");
                             //    disposable = d;
                         }
 
                         @Override
                         public void onNext(Uri downloadUri) {
-                            Log.d(TAG, "onNext: " + downloadUri.toString());
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    firebaseHelper.logEvent("image_uploaded");
-                                    savedClaimedStarz(downloadUri.toString());
-                                    progressDialog.dismiss();
-                                }
+                            Timber.d("onNext: %s", downloadUri.toString());
+                            getActivity().runOnUiThread(() -> {
+                                firebaseHelper.logEvent("image_uploaded");
+                                savedClaimedStarz(downloadUri.toString());
+                                progressDialog.dismiss();
                             });
-
-
                         }
-
                         @Override
                         public void onError(Throwable e) {
-                            Log.e(TAG, "onError: " + e.getMessage());
+                            Timber.e("onError: %s", e.getMessage());
                         }
 
                         @Override
                         public void onComplete() {
-                            Log.d(TAG, "onComplete");
+                            Timber.d("onComplete");
                         }
                     });
         } else {
             savedClaimedStarz(null);
-
         }
-
     }
 
     private void savedClaimedStarz(String s) {
@@ -257,7 +220,7 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
             return;
         }
         this.warnText.setVisibility(View.INVISIBLE);
-        int intValue = Integer.valueOf(trim2);
+        int intValue = Integer.parseInt(trim2);
         if (intValue > m_selectedKid.getTotalStarz()) {
             this.warnText.setVisibility(View.VISIBLE);
             this.warnText.setText(String.format("%s %s", getString(R.string.maximum_redeem_point), Math.max(m_selectedKid.getTotalStarz(), 0)));
@@ -287,32 +250,29 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
                 .subscribe(new Observer<Starz>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe");
+                        Timber.d("onSubscribe");
                         //    disposable = d;
                     }
 
                     @Override
                     public void onNext(Starz createdStarz) {
-                        Log.d(TAG, "onNext: " + createdStarz.getCount());
+                        Timber.d("onNext: %s", createdStarz.getCount());
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                firebaseHelper.logEvent("starz_claimed");
-                                //dismissProgressBar();
-                                firebaseHelper.updateSelectedKidStarz(createdStarz, m_selectedKid)
-                                        .subscribe(() -> {
-                                            Log.i(TAG, "updateKidzCollection: completed");
+                        getActivity().runOnUiThread(() -> {
+                            firebaseHelper.logEvent("starz_claimed");
+                            //dismissProgressBar();
+                            firebaseHelper.updateSelectedKidStarz(createdStarz, m_selectedKid)
+                                    .subscribe(() -> {
+                                        Timber.i("updateKidzCollection: completed");
 
-                                           validate(createdStarz);
+                                       validate(createdStarz);
 
 
-                                            //   dismissProgressBar();
-                                        }, throwable -> {
-                                            // handle error
-                                        });
+                                        //   dismissProgressBar();
+                                    }, throwable -> {
+                                        // handle error
+                                    });
 
-                            }
                         });
 
 
@@ -325,12 +285,12 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.getMessage());
+                        Timber.e("onError: %s", e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete");
+                        Timber.d("onComplete");
                     }
                 });
     }
