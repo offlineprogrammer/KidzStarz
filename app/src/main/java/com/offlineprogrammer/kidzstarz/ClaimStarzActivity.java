@@ -3,6 +3,8 @@ package com.offlineprogrammer.kidzstarz;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,12 +55,13 @@ public class ClaimStarzActivity extends AppCompatActivity {
     private TextInputLayout claimedstarz_count_text_input;
     private TextView warnText;
     private Uri imagePath;
-
+    private Bitmap image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_claim_starz);
         firebaseHelper = new FirebaseHelper(getApplicationContext());
+
 
         kidMonsterImageView = findViewById(R.id.kid_monster_name);
         sad_starz = findViewById(R.id.sad_starz);
@@ -145,6 +148,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
     }
 
     private void saveClaimedStarz(Starz claimedStarz) {
+        Intent returnIntent = new Intent(this, DetailsActivity.class);
         firebaseHelper.saveStarz(claimedStarz).observeOn(Schedulers.io())
                 //.observeOn(Schedulers.m)
                 .subscribeOn(Schedulers.io())
@@ -158,6 +162,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Starz createdStarz) {
                         Log.d(TAG, "onNext: " + createdStarz.getCount());
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -166,10 +171,7 @@ public class ClaimStarzActivity extends AppCompatActivity {
                                 firebaseHelper.updateSelectedKidStarz(createdStarz, selectedKid)
                                         .subscribe(() -> {
                                             Log.i(TAG, "updateKidzCollection: completed");
-                                            Intent returnIntent = new Intent();
-                                            returnIntent.putExtra("result", "result");
-                                            setResult(Activity.RESULT_OK, returnIntent);
-                                            finish();
+
                                             //   dismissProgressBar();
                                         }, throwable -> {
                                             // handle error
@@ -177,6 +179,15 @@ public class ClaimStarzActivity extends AppCompatActivity {
 
                             }
                         });
+
+                        returnIntent.putExtra("result", "result");
+                        returnIntent.putExtra("image", createdStarz.getFirestoreImageUri() );
+                        returnIntent.putExtra("createdDate", createdStarz.getCreatedDate() );
+                        returnIntent.putExtra("desc", createdStarz.getDesc() );
+
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finishActivity(3);
+
 
 
                     }
@@ -217,8 +228,9 @@ public class ClaimStarzActivity extends AppCompatActivity {
         // this.editButton.setVisibility(0);
         this.claimed_starz_ImageView.setVisibility(View.VISIBLE);
         this.claimed_starz_edit_ImageView.setVisibility(View.VISIBLE);
-        // this.image = BitmapFactory.decodeFile(this.imagePath);
+         this.image = BitmapFactory.decodeFile(UCrop.getOutput(intent).getPath());
     }
+
 
     public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);

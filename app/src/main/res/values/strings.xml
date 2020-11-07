@@ -39,6 +39,9 @@
 
     <string name="some_fields_are_empty">Some fields are empty</string>
     <string name="maximum_redeem_point">Maximum starz can be claimed is</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="share">Share</string>
 
     <!--<string name="plan_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="kid_adMob_unit_id">ca-app-pub-3940256099942544/6300978111</string>

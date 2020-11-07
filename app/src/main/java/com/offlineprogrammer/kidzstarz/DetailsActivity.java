@@ -2,6 +2,7 @@ package com.offlineprogrammer.kidzstarz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -12,10 +13,15 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -25,7 +31,9 @@ import com.offlineprogrammer.kidzstarz.starz.OnStarzListener;
 import com.offlineprogrammer.kidzstarz.starz.Starz;
 import com.offlineprogrammer.kidzstarz.starz.StarzAdapter;
 import com.offlineprogrammer.kidzstarz.starz.StarzGridItemDecoration;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import io.reactivex.Observer;
@@ -46,6 +54,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
     private ArrayList<Starz> starzArrayList = new ArrayList<>();
     private Disposable disposable;
     private com.google.android.gms.ads.AdView adView;
+    private Fragment currentFragment;
 
 
     @Override
@@ -149,8 +158,72 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
     public void onActivityResult(int i, int i2, @Nullable Intent intent) {
         super.onActivityResult(i, i2, intent);
+        ClaimFragment claimFragment;
+
+        if (i2 == -1 && i == 69) {
+            FragmentManager supportFragmentManager = getSupportFragmentManager();
+            if (supportFragmentManager.getBackStackEntryCount() > 0) {
+                String name = supportFragmentManager.getBackStackEntryAt(supportFragmentManager.getBackStackEntryCount() - 1).getName();
+                if (Constants.CLAIM.equals(name) && (claimFragment = (ClaimFragment) supportFragmentManager.findFragmentByTag(name)) != null && claimFragment.isVisible()) {
+                    claimFragment.onCropFinish(intent);
+                } else {
+                    //onCropFinish(intent);
+                }
+            } else {
+               // onCropFinish(intent);
+
+            }
+
+        }
+
+
+        if (ImagePicker.shouldHandle(i, i2, intent)) {
+            Image firstImageOrNull = ImagePicker.getFirstImageOrNull(intent);
+            if (firstImageOrNull != null) {
+                UCrop.of(Uri.fromFile(new File(firstImageOrNull.getPath())), Uri.fromFile(new File(getCacheDir(), "cropped"))).withAspectRatio(1.0f, 1.0f).start(this);
+            }
+        }
+
+
+
+
+
+        if (i == 2) {
+            if (i2 == Activity.RESULT_OK) {
+
+
+            }
+        }
         Log.i(TAG, "onActivityResult: We r back");
         getkidStarz();
+
+    }
+    public void gotoSharePage(Uri starImageUri, String str) {
+        FragmentTransaction beginTransaction = getSupportFragmentManager().beginTransaction();
+        this.setTitle(R.string.share);
+        ShareFragment newInstance = ShareFragment.newInstance();
+
+        newInstance.setData( ((starImageUri == null) ? null : starImageUri.toString())  , str, selectedKid);
+
+        this.currentFragment = newInstance;
+        beginTransaction.add(R.id.container, newInstance, Constants.SHARE);
+        beginTransaction.addToBackStack(Constants.SHARE);
+        firebaseHelper.logEvent("show_share_page");
+        beginTransaction.commit();
+    }
+
+    private void gotoClaimPage() {
+        FragmentTransaction beginTransaction = getSupportFragmentManager().beginTransaction();
+        this.setTitle(R.string.share);
+        ClaimFragment newInstance = ClaimFragment.newInstance();
+        newInstance.setData(selectedKid);
+
+        this.currentFragment = newInstance;
+        beginTransaction.add(R.id.container, newInstance, Constants.CLAIM);
+        beginTransaction.addToBackStack(Constants.CLAIM);
+        firebaseHelper.logEvent("show_share_page");
+        beginTransaction.commit();
+
     }
 
 
@@ -159,12 +232,12 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         claim_starz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mIntent = new Intent(DetailsActivity.this, ClaimStarzActivity.class);
-                mIntent.putExtra("selected_kid", selectedKid);
-                startActivityForResult(mIntent, 3);
+                gotoClaimPage();
             }
         });
     }
+
+
 
     private void getkidStarz() {
         firebaseHelper.getkidStarz(selectedKid).observeOn(Schedulers.io())
