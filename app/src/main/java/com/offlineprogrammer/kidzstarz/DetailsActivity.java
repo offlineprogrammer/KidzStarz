@@ -89,10 +89,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
     }
 
     private void setupAds() {
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        MobileAds.initialize(this, initializationStatus -> {
         });
         adView = findViewById(R.id.ad_view);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -168,10 +165,8 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                goBack();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            goBack();
         }
         return true;
     }
@@ -187,13 +182,10 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
                 String name = supportFragmentManager.getBackStackEntryAt(supportFragmentManager.getBackStackEntryCount() - 1).getName();
                 if (Constants.CLAIM.equals(name) && (claimFragment = (ClaimFragment) supportFragmentManager.findFragmentByTag(name)) != null && claimFragment.isVisible()) {
                     claimFragment.onCropFinish(intent);
-                } else {
-                    //onCropFinish(intent);
-                }
-            } else {
-               // onCropFinish(intent);
+                }  //onCropFinish(intent);
 
-            }
+            }  // onCropFinish(intent);
+
 
         }
 
@@ -214,9 +206,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         FragmentTransaction beginTransaction = getSupportFragmentManager().beginTransaction();
         this.setTitle(R.string.share);
         ShareFragment newInstance = ShareFragment.newInstance();
-
         newInstance.setData( ((starImageUri == null) ? null : starImageUri.toString())  , str, selectedKid);
-
         this.currentFragment = newInstance;
         beginTransaction.add(R.id.container, newInstance, Constants.SHARE);
         beginTransaction.addToBackStack(Constants.SHARE);
@@ -241,12 +231,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
     private void configClaimStarzButton() {
         Button claim_starz = findViewById(R.id.claim_starz);
-        claim_starz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gotoClaimPage();
-            }
-        });
+        claim_starz.setOnClickListener(view -> gotoClaimPage());
     }
 
 
@@ -264,18 +249,13 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
                     @Override
                     public void onNext(ArrayList<Starz> starzs) {
-                        Timber.d("onNext:  " + starzs.size());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateRecylerView(starzs);
-                            }
-                        });
+                        Timber.d("onNext:  %s", starzs.size());
+                        runOnUiThread(() -> updateRecylerView(starzs));
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Timber.e("onError: " + e.getMessage());
+                        Timber.e("onError: %s", e.getMessage());
                     }
 
                     @Override

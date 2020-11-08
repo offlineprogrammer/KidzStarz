@@ -165,7 +165,7 @@ public class ShareFragment extends Fragment {
             ContentValues contentValues = new ContentValues();
             contentValues.put("_data", this.shareImagePath);
             Uri insert = this.context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            intent.putExtra("android.intent.extra.TEXT", "Download Kidz Tokenz – Reward Kids https://play.google.com/store/apps/details?id=com.offlineprogrammer.KidzTokenz&referrer=utm_source%3Dappshare");
+            intent.putExtra("android.intent.extra.TEXT", "Download Kidz Starz – Reward Kids https://play.google.com/store/apps/details?id=com.offlineprogrammer.kidzstarz&referrer=utm_source%3Dappshare");
             intent.putExtra("android.intent.extra.STREAM", insert);
             startActivity(Intent.createChooser(intent, "Share Image"));
         }
@@ -178,7 +178,7 @@ public class ShareFragment extends Fragment {
         Bitmap createBitmap = Bitmap.createBitmap(findViewById.getDrawingCache(), 0, 0, findViewById.getWidth(), findViewById.getHeight());
         findViewById.setDrawingCacheEnabled(false);
         try {
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath(), "/KidzTokenz");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath(), "/KidzStarz");
             file.mkdirs();
             String path = file.getPath();
             File file2 = new File(path, m_selectedKid.getKidName() + " " + System.currentTimeMillis() + ".jpg");
