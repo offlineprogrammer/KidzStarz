@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -140,10 +141,29 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
     }
 
     private void goBack() {
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", "result");
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+
+
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        Fragment fragment = this.currentFragment;
+        if (fragment instanceof ClaimFragment) {
+            this.setTitle(selectedKid.getKidName());
+          //  return;
+        } else if (fragment instanceof ShareFragment) {
+            this.setTitle(selectedKid.getKidName());
+          //  return;
+        }
+
+        if (supportFragmentManager.getBackStackEntryCount() <= 0 ) {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("result", "result");
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        } else {
+            supportFragmentManager.popBackStack();
+        }
+
+
+
     }
 
     @Override
