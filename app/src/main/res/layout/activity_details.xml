@@ -7,8 +7,7 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".DetailsActivity">
 
-    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/kid_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +21,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -154,7 +154,7 @@
             android:text="@string/ksz_claim_starz"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_25"></androidx.appcompat.widget.AppCompatButton>
+            android:textSize="@dimen/text_size_25" />
     </FrameLayout>
 
     <com.google.android.gms.ads.AdView
@@ -168,7 +168,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></com.google.android.gms.ads.AdView>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
         android:id="@+id/container"
@@ -176,6 +176,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/kid_card"/>
+        app:layout_constraintTop_toBottomOf="@id/kid_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/margin_50"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

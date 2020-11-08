@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class DetailsActivity extends AppCompatActivity implements OnStarzListener {
     private static final String TAG = "DetailsActivity";
@@ -134,7 +135,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed Called");
+        Timber.d("onBackPressed Called");
         goBack();
     }
 
@@ -185,16 +186,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         }
 
 
-
-
-
-        if (i == 2) {
-            if (i2 == Activity.RESULT_OK) {
-
-
-            }
-        }
-        Log.i(TAG, "onActivityResult: We r back");
+        Timber.i("onActivityResult: We r back");
         getkidStarz();
 
     }
@@ -214,7 +206,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
     private void gotoClaimPage() {
         FragmentTransaction beginTransaction = getSupportFragmentManager().beginTransaction();
-        this.setTitle(R.string.share);
+        this.setTitle(R.string.claim);
         ClaimFragment newInstance = ClaimFragment.newInstance();
         newInstance.setData(selectedKid);
 
@@ -246,13 +238,13 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
                 .subscribe(new Observer<ArrayList<Starz>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe");
+                        Timber.d("onSubscribe");
                         disposable = d;
                     }
 
                     @Override
                     public void onNext(ArrayList<Starz> starzs) {
-                        Log.d(TAG, "onNext:  " + starzs.size());
+                        Timber.d("onNext:  " + starzs.size());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -263,12 +255,12 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.getMessage());
+                        Timber.e("onError: " + e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete");
+                        Timber.d("onComplete");
                     }
                 });
 
