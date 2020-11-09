@@ -202,7 +202,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         getkidStarz();
 
     }
-    public void gotoSharePage(Uri starImageUri, String str) {
+    public void gotoSharePage(Uri starImageUri, String str, String claimedImagePath) {
         FragmentTransaction beginTransaction = getSupportFragmentManager().beginTransaction();
         this.setTitle(R.string.share);
         ShareFragment newInstance = ShareFragment.newInstance();

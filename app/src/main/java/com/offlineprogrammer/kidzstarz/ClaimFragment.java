@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -32,6 +33,8 @@ import com.offlineprogrammer.kidzstarz.starz.Starz;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -66,6 +69,7 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
     private TextInputLayout claimedstarz_count_text_input;
     private TextView warnText;
     private Uri imagePath;
+    private String claimedImagePath;
     private Bitmap image;
     private static final int CAMERA_REQUEST = 1888;
     private static final String TAG = "ClaimFragment";
@@ -160,13 +164,20 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
         if (ImagePicker.shouldHandle(i, i2, intent)) {
             Image firstImageOrNull = ImagePicker.getFirstImageOrNull(intent);
             if (firstImageOrNull != null) {
-                UCrop.of(Uri.fromFile(new File(firstImageOrNull.getPath())), Uri.fromFile(new File(this.context.getCacheDir(), "claimed"+ " " + System.currentTimeMillis() + ".jpg"))).withAspectRatio(1.0f, 1.0f).start((DetailsActivity)this.context);
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath(), "/KidzStarz/claimed");
+                file.mkdirs();
+                String path = file.getPath();
+                File file2 = new File(path, m_selectedKid.getKidName() + " " + System.currentTimeMillis() + ".jpg");
+
+                UCrop.of(Uri.fromFile(new File(firstImageOrNull.getPath())), Uri.fromFile(file2)).withAspectRatio(1.0f, 1.0f).start((DetailsActivity)this.context);
+                this.claimedImagePath = file2.toString();
             }
         }
 
         if (i == UCrop.REQUEST_CROP) {
             onCropFinish(intent);
         }
+
     }
 
 
@@ -296,7 +307,7 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
     }
 
     private void validate(Starz createdStarz) {
-        ((DetailsActivity) this.context).gotoSharePage(this.imagePath, createdStarz.getDesc());
+        ((DetailsActivity) this.context).gotoSharePage(this.imagePath, createdStarz.getDesc(), this.claimedImagePath);
     }
 
 
