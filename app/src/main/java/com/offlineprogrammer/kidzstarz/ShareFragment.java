@@ -109,7 +109,7 @@ public class ShareFragment extends Fragment {
         new Handler().postDelayed(() -> {
 
             Share(view);
-            showSharePopup(view);
+           // showSharePopup(view);
         }, 2000);
 
     }
@@ -123,9 +123,6 @@ public class ShareFragment extends Fragment {
         this.celebrate_note_text = view.findViewById(R.id.celebrate_note_text);
         this.imageView = view.findViewById(R.id.giftImage);
         this.date = view.findViewById(R.id.celebrate_share_created_at);
-
-
-
         if (this.m_celebrate_imageUrl == null) {
 
             imageView.setImageResource(R.drawable.celebrateimage);
@@ -137,23 +134,15 @@ public class ShareFragment extends Fragment {
                     .into(imageView);
         }
 
-
         this.celebrate_note_text.setText(this.m_celebrate_note);
         this.date.setText(DateFormat.format("MMM dd, hh:mm a", new Date()));
-
         view.findViewById(R.id.share).setOnClickListener(this::showSharePopup);
-
-        view.findViewById(R.id.log_in_progress).setVisibility(View.VISIBLE);
-
         kidImageView = view.findViewById(R.id.kidMonsterImage);
-
         kidImageView.setImageResource(context.getResources().getIdentifier(m_selectedKid.getMonsterImageResourceName(), "drawable",
                 context.getPackageName()));
-
     }
 
     public void skipShare(View view) {
-
         ((DetailsActivity) this.context).finish();
     }
 

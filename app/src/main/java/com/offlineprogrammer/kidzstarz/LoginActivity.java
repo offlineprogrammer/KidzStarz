@@ -25,6 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.offlineprogrammer.kidzstarz.user.User;
 
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -163,17 +164,22 @@ public class LoginActivity extends AppCompatActivity {
         firebaseHelper.getUserData().observeOn(Schedulers.io())
                 //.observeOn(Schedulers.m)
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<User>() {
+                .subscribe(new SingleObserver<User>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe");
+                        Timber.d("onSubscribe");
                         disposable = d;
                     }
 
                     @Override
-                    public void onNext(User user) {
-                        Log.d(TAG, "onNext: " + user.getUserId());
-                        Log.d(TAG, "onNext: m_User " + firebaseHelper.kidzStarz.getUser().getUserEmail());
+                    public void onError(Throwable e) {
+                        Timber.e("onError: %s", e.getMessage());
+                        saveUser();
+                    }
+
+                    @Override
+                    public void onSuccess(User user) {
+                        Timber.d("onNext: %s", user.getUserId());
                         firebaseHelper.setUserFcmInstanceId()
                                 .subscribe(() -> {
                                     Timber.i("setUserFcmInstanceId: completed");
@@ -189,21 +195,9 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
 
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-
-                        Log.e(TAG, "onError: " + e.getMessage());
-                        saveUser();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d(TAG, "onComplete");
                     }
                 });
-
     }
 
     private void saveUser() {

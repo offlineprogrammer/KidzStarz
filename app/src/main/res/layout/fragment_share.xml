@@ -47,12 +47,12 @@
                     android:id="@+id/kidMonsterImage"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:layout_marginStart="@dimen/margin_20"
-                    app:layout_constraintBottom_toBottomOf="@+id/guideline"
-                    app:layout_constraintStart_toStartOf="parent"
                     android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/margin_20"
                     android:contentDescription="@null"
                     app:highlightEnable="false"
+                    app:layout_constraintBottom_toBottomOf="@+id/guideline"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/guideline"
                     app:strokeColor="@color/colorPrimary"
                     app:strokeWidth="@dimen/margin_5" />
@@ -98,17 +98,36 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_35"
+            android:background="@drawable/yellow_button_background"
             android:orientation="horizontal"
             android:padding="@dimen/margin_20">
-            <ProgressBar
-                android:id="@+id/log_in_progress"
-                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large.Inverse"
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/share_icon" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:visibility="gone" />
+                android:layout_marginStart="@dimen/margin_10"
+                android:text="@string/share"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_30" />
         </LinearLayout>
+
+        <CheckedTextView
+            android:id="@+id/skip_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_30"
+            android:padding="@dimen/margin_10"
+            android:text="@string/skip"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_20" />
 
 
     </LinearLayout>

@@ -202,13 +202,13 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         getkidStarz();
 
     }
-    public void gotoSharePage(Uri starImageUri, String str, String claimedImagePath) {
+    public void gotoSharePage(Uri starImageUri, Starz str, String claimedImagePath) {
         FragmentTransaction beginTransaction = getSupportFragmentManager().beginTransaction();
         this.setTitle(R.string.share);
         ShareFragment newInstance = ShareFragment.newInstance();
-        newInstance.setData( ((starImageUri == null) ? null : starImageUri.toString())  , str, selectedKid);
+        newInstance.setData( ((starImageUri == null) ? null : starImageUri.toString())  , str.getDesc(), selectedKid);
         this.currentFragment = newInstance;
-        beginTransaction.add(R.id.container, newInstance, Constants.SHARE);
+        beginTransaction.replace(R.id.container, newInstance, Constants.SHARE);
         beginTransaction.addToBackStack(Constants.SHARE);
         firebaseHelper.logEvent("show_share_page");
         beginTransaction.commit();
@@ -221,7 +221,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         newInstance.setData(selectedKid);
 
         this.currentFragment = newInstance;
-        beginTransaction.add(R.id.container, newInstance, Constants.CLAIM);
+        beginTransaction.replace(R.id.container, newInstance, Constants.CLAIM);
         beginTransaction.addToBackStack(Constants.CLAIM);
         firebaseHelper.logEvent("show_share_page");
         beginTransaction.commit();

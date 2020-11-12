@@ -238,17 +238,12 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
             return;
         }
 
-
         Starz claimedStarz = new Starz(m_selectedKid.getKidUUID(),
                 trim,
                 intValue,
                 Constants.CLAIMED);
-
         claimedStarz.setFirestoreImageUri(s);
-
-
         saveClaimedStarz(claimedStarz);
-
 
     }
 
@@ -286,12 +281,6 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
 
                         });
 
-
-
-
-
-
-
                     }
 
                     @Override
@@ -307,7 +296,7 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
     }
 
     private void validate(Starz createdStarz) {
-        ((DetailsActivity) this.context).gotoSharePage(this.imagePath, createdStarz.getDesc(), this.claimedImagePath);
+        ((DetailsActivity) this.context).gotoSharePage(this.imagePath, createdStarz, this.claimedImagePath);
     }
 
 

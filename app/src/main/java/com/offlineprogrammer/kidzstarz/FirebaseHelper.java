@@ -41,6 +41,7 @@ import java.util.UUID;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
+import io.reactivex.Single;
 import timber.log.Timber;
 
 public class FirebaseHelper {
@@ -93,38 +94,26 @@ public class FirebaseHelper {
         });
     }
 
-
-
-
-    Observable<User> getUserData() {
-        return Observable.create((ObservableEmitter<User> emitter) -> {
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        final DocumentReference docRef = m_db.collection("users").document(currentUser.getUid());
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
+    Single<User> getUserData() {
+        return Single.create(emitter -> {
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            final DocumentReference docRef = m_db.collection(USERS_COLLECTION).document(currentUser.getUid());
+            docRef.addSnapshotListener((snapshot, e) -> {
                 if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
+                    Timber.tag(TAG).w(e, "Listen failed.");
                     return;
                 }
-
                 if (snapshot != null && snapshot.exists()) {
-                    Log.d(TAG, "Current data: " + snapshot.getData());
+                    Timber.d("V2.0 Current data: %s", snapshot.getData());
                     kidzStarz.setUser(snapshot.toObject(User.class));
-                    Log.d(TAG, "Current User: " + kidzStarz.getUser());
-                    Log.d(TAG, "onEvent: User Kidz " +  kidzStarz.getUser().getKidz());
-                    emitter.onNext(kidzStarz.getUser());
-
+                    emitter.onSuccess(kidzStarz.getUser());
                 } else {
-                    Log.d(TAG, "Current data: null");
-                    emitter.onError(new Exception("No data found"));
+                    Timber.d("V2.0 Current data: null");
+                    emitter.onError(new Exception("V2.0 o data found"));
                 }
-            }
-        });
+            });
         });
     }
-
 
     public void logEvent(String event_name) {
         mFirebaseAnalytics.logEvent(event_name, null);
