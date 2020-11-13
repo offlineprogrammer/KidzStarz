@@ -146,7 +146,9 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
             this.setTitle(selectedKid.getKidName());
           //  return;
         } else if (fragment instanceof ShareFragment) {
-            this.setTitle(selectedKid.getKidName());
+
+            setResult(0, new Intent());
+            finish();
           //  return;
         }
 
@@ -221,7 +223,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         newInstance.setData(selectedKid);
 
         this.currentFragment = newInstance;
-        beginTransaction.replace(R.id.container, newInstance, Constants.CLAIM);
+        beginTransaction.add(R.id.container, newInstance, Constants.CLAIM);
         beginTransaction.addToBackStack(Constants.CLAIM);
         firebaseHelper.logEvent("show_share_page");
         beginTransaction.commit();

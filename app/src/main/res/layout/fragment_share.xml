@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_35"
-            android:background="@drawable/yellow_button_background"
+            android:background="@drawable/share_button_background"
             android:orientation="horizontal"
             android:padding="@dimen/margin_20">
 
@@ -114,7 +114,7 @@
                 android:text="@string/share"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="@dimen/text_size_25" />
         </LinearLayout>
 
         <CheckedTextView
