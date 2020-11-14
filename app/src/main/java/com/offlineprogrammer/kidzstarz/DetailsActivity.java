@@ -1,6 +1,9 @@
 package com.offlineprogrammer.kidzstarz;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,6 +60,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
     private Disposable disposable;
     private com.google.android.gms.ads.AdView adView;
     private Fragment currentFragment;
+    ProgressDialog progressBar;
 
 
     @Override
@@ -64,6 +68,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         firebaseHelper = new FirebaseHelper(getApplicationContext());
+        setupProgressBar();
 
         kidMonsterImageView = findViewById(R.id.kid_monster_name);
         sad_starz = findViewById(R.id.sad_starz);
@@ -86,6 +91,50 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
         setupAds();
 
+    }
+
+    private void setupProgressBar() {
+        dismissProgressBar();
+        progressBar = new ProgressDialog(this);
+        progressBar.setMessage("Loading data ...");
+        progressBar.show();
+    }
+
+    private void dismissProgressBar() {
+        dismissWithCheck(progressBar);
+    }
+
+    public void dismissWithCheck(ProgressDialog dialog) {
+        if (dialog != null) {
+            if (dialog.isShowing()) {
+
+                //get the Context object that was used to great the dialog
+                Context context = ((ContextWrapper) dialog.getContext()).getBaseContext();
+
+                // if the Context used here was an activity AND it hasn't been finished or destroyed
+                // then dismiss it
+                if (context instanceof Activity) {
+
+                    // Api >=17
+                    if (!((Activity) context).isFinishing() && !((Activity) context).isDestroyed()) {
+                        dismissWithTryCatch(dialog);
+                    }
+                } else
+                    // if the Context used wasn't an Activity, then dismiss it too
+                    dismissWithTryCatch(dialog);
+            }
+            dialog = null;
+        }
+    }
+
+    public void dismissWithTryCatch(ProgressDialog dialog) {
+        try {
+            dialog.dismiss();
+        } catch (final Exception e) {
+            // Do nothing.
+        } finally {
+            dialog = null;
+        }
     }
 
     private void setupAds() {
@@ -239,6 +288,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
 
 
     private void getkidStarz() {
+        setupProgressBar();
         firebaseHelper.getkidStarz(selectedKid).observeOn(Schedulers.io())
                 //.observeOn(Schedulers.m)
                 .subscribeOn(Schedulers.io())
@@ -258,6 +308,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
                     @Override
                     public void onError(Throwable e) {
                         Timber.e("onError: %s", e.getMessage());
+                        dismissProgressBar();
                     }
 
                     @Override
@@ -271,6 +322,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
     private void updateRecylerView(ArrayList<Starz> starzs) {
         starzAdapter.updateData(starzs);
         starzRecyclerView.scrollToPosition(0);
+        dismissProgressBar();
 
     }
 
@@ -286,6 +338,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         int largePadding = getResources().getDimensionPixelSize(R.dimen.ksz_starz_grid_spacing_small);
         int smallPadding = getResources().getDimensionPixelSize(R.dimen.ksz_starz_grid_spacing_small);
         starzRecyclerView.addItemDecoration(new StarzGridItemDecoration(largePadding, smallPadding));
+      //  dismissProgressBar();
 
     }
 

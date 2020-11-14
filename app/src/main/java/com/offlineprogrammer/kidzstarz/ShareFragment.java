@@ -137,6 +137,7 @@ public class ShareFragment extends Fragment {
         this.celebrate_note_text.setText(this.m_celebrate_note);
         this.date.setText(DateFormat.format("MMM dd, hh:mm a", new Date()));
         view.findViewById(R.id.share).setOnClickListener(this::showSharePopup);
+        view.findViewById(R.id.skip_share).setOnClickListener(view1 -> skipShare(view1));
         kidImageView = view.findViewById(R.id.kidMonsterImage);
         kidImageView.setImageResource(context.getResources().getIdentifier(m_selectedKid.getMonsterImageResourceName(), "drawable",
                 context.getPackageName()));
