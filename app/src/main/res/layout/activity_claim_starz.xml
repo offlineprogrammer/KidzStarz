@@ -1,117 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ClaimStarzActivity">
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/kid_card"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardElevation="2dp"
-            app:cardPreventCornerOverlap="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_60"
+                    android:background="@color/colorPrimary" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="null"
-                        android:src="@drawable/happystar" />
 
-                    <TextView
-                        android:id="@+id/happy_starz"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="+10"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/text_size_14" />
-
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_weight="3">
-
-                    <ImageView
-                        android:id="@+id/kid_monster_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/ksz_kidz_card_image_height"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitCenter" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="null"
-                        android:src="@drawable/sadstar" />
-
-                    <TextView
-                        android:id="@+id/sad_starz"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-10"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/text_size_14" />
-                </LinearLayout>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <FrameLayout
-            android:id="@+id/claimedstarz_photo_FrameLayout"
+            <FrameLayout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="top|center_vertical|center_horizontal|center"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_10">
+
+                <com.github.abdularis.civ.CircleImageView
+                    android:id="@+id/profile_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    app:highlightEnable="false"
+                    app:strokeColor="@color/colorPrimaryDark"
+                    app:strokeWidth="@dimen/margin_5" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_15"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/subtitle_redeem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_10"
+
+                android:textSize="@dimen/text_size_14" />
+
+            <LinearLayout
+                android:id="@+id/wish_item_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/wish_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-5dp"
+                    android:text="pro_features_include"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_16"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:background="@color/colorPrimary" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/point_input"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_100"
+                android:layout_marginStart="@dimen/margin_20"
+                android:layout_marginTop="@dimen/margin_5"
+                android:layout_marginEnd="@dimen/margin_20"
+
+                android:gravity="center"
+                android:hint="enter_points"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:maxLength="9"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/light_grey"
+                android:textSize="@dimen/text_size_48"
+                 />
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_30"
             android:paddingStart="@dimen/margin_20"
-            android:paddingEnd="@dimen/margin_20"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/kid_card">
+            android:paddingEnd="@dimen/margin_20">
 
             <ImageView
-                android:id="@+id/claimed_starz_ImageView"
+                android:id="@+id/image_view"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="match_parent"
                 android:alpha="0.4"
                 android:contentDescription="@null"
-                android:scaleType="fitXY"
-
+                android:minHeight="200dp"
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/claimed_starz_edit_ImageView"
+                android:id="@+id/edit_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -123,7 +136,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark">
+                android:background="@color/colorPrimary">
 
                 <TextView
                     android:id="@+id/camera_button"
@@ -133,141 +146,74 @@
                     android:layout_margin="@dimen/margin_50"
                     android:drawableTop="@drawable/ic_camera"
                     android:text="@string/capture_this_moment"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_14"
+                     />
             </FrameLayout>
         </FrameLayout>
 
-        <LinearLayout
-            android:id="@+id/claimedstarz_count_LinearLayout"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/some_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/claimedstarz_photo_FrameLayout">
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_20"
+            android:text="share_your_thoughts_on_the_gift"
+            android:textColor="@color/hint_black"
+            android:textSize="@dimen/text_size_14"
+             />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_10"
-                android:layout_marginBottom="@dimen/margin_10"
-                android:text="@string/ksz_enter_starz_being_claimed"
-                android:textColor="@color/subtitle_black"
-                android:textSize="@dimen/text_size_14" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/claimedstarz_count_text_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_20"
-                android:layout_marginTop="@dimen/margin_5"
-                android:layout_marginEnd="@dimen/margin_20"
-                android:gravity="center"
-                android:hint="@string/ksz_hint_claimedstarz_count">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/claimedstarz_count_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:maxLength="9"
-                    android:textColor="@color/colorAccent"
-                    android:textColorHint="@color/light_grey"
-                    android:textSize="@dimen/text_size_20" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/claimedstarz_desc_LinearLayout"
+        <EditText
+            android:id="@+id/note_text"
             android:layout_width="match_parent"
+            android:layout_height="@dimen/height_100"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_20"
+
+            android:gravity="top|left|center_vertical|center_horizontal|center|start"
+            android:hint="i_feel_glad"
+            android:inputType="textShortMessage"
+            android:maxLength="100"
+            android:maxLines="2"
+            android:paddingStart="@dimen/margin_10"
+            android:paddingTop="@dimen/margin_10"
+            android:paddingEnd="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_10"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/light_grey"
+            android:textSize="@dimen/text_size_14"
+             />
+
+        <TextView
+            android:id="@+id/warn_text"
+            style="@style/warnText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/claimedstarz_count_LinearLayout">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:visibility="gone"
+             />
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/claimedstarz_desc_text_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_20"
-                android:layout_marginTop="@dimen/margin_15"
-                android:layout_marginEnd="@dimen/margin_20"
-                android:gravity="center"
-                android:hint="@string/ksz_hint_claimedstarz_desc">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/claimedstarz_desc_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_100"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="top|left|center_vertical|center_horizontal|center|start"
-                    android:imeOptions="actionDone"
-                    android:inputType="textShortMessage"
-                    android:maxLength="100"
-                    android:maxLines="2"
-                    android:paddingStart="@dimen/margin_10"
-                    android:paddingTop="@dimen/margin_10"
-                    android:paddingEnd="@dimen/margin_10"
-                    android:paddingBottom="@dimen/margin_10"
-                    android:textColor="@color/colorAccent"
-                    android:textColorHint="@color/light_grey"
-                    android:textSize="@dimen/text_size_14" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/claimedstarz_warn_LinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/claimedstarz_desc_LinearLayout">
-
-            <TextView
-                android:id="@+id/warn_text"
-                style="@style/warnText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_10"
-                android:layout_marginBottom="@dimen/margin_10"
-                android:visibility="invisible" />
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/save_claimedstarz_framelayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/claimedstarz_warn_LinearLayout">
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/save_claim_starz"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_50"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/margin_60"
-                android:layout_marginTop="@dimen/margin_20"
-                android:layout_marginEnd="@dimen/margin_60"
-                android:layout_marginBottom="@dimen/margin_30"
-                android:background="@drawable/ksz_button_background"
-                android:text="@string/ksz_button_claim"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_25">
-
-            </androidx.appcompat.widget.AppCompatButton>
-        </FrameLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/redeem_button"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_30"
+            android:layout_marginBottom="@dimen/margin_30"
+            android:background="@drawable/ksz_button_background"
+            android:contentDescription="@null"
+            android:elevation="10dp"
+            android:gravity="center"
+            android:paddingStart="@dimen/margin_20"
+            android:paddingEnd="@dimen/margin_20"
+            android:text="Test"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_30"
+            />
+    </LinearLayout>
 </ScrollView>

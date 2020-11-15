@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -67,6 +68,9 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
     private Button save_claim_starz;
     private TextInputLayout claimedstarz_desc_text_input;
     private TextInputLayout claimedstarz_count_text_input;
+    private EditText claimedstarz_desc_edit_text;
+    private EditText claimedstarz_count_edit_text;
+
     private TextView warnText;
     private Uri imagePath;
     private String claimedImagePath;
@@ -128,8 +132,8 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
         claimed_starz_edit_ImageView = view.findViewById(R.id.claimed_starz_edit_ImageView);
         camera_button = view.findViewById(R.id.camera_button);
         save_claim_starz = view.findViewById(R.id.save_claim_starz);
-        claimedstarz_desc_text_input = view.findViewById(R.id.claimedstarz_desc_text_input);
-        claimedstarz_count_text_input = view.findViewById(R.id.claimedstarz_count_text_input);
+        claimedstarz_desc_edit_text = view.findViewById(R.id.claimedstarz_desc_edit_text);
+        claimedstarz_count_edit_text = view.findViewById(R.id.claimedstarz_count_edit_text);
         warnText = view.findViewById(R.id.warn_text);
 
         configButtons();
@@ -223,8 +227,8 @@ public class ClaimFragment extends Fragment implements EasyPermissions.Permissio
     }
 
     private void savedClaimedStarz(String s) {
-        String trim = this.claimedstarz_desc_text_input.getEditText().getText().toString().trim();
-        String trim2 = this.claimedstarz_count_text_input.getEditText().getText().toString().trim();
+        String trim = this.claimedstarz_desc_edit_text.getText().toString().trim();
+        String trim2 = this.claimedstarz_count_edit_text.getText().toString().trim();
         if (trim.isEmpty() || trim2.isEmpty()) {
             this.warnText.setText(R.string.some_fields_are_empty);
             this.warnText.setVisibility(View.VISIBLE);

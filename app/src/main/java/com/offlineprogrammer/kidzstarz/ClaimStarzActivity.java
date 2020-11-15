@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,8 +52,9 @@ public class ClaimStarzActivity extends AppCompatActivity {
     private ImageView claimed_starz_edit_ImageView;
     private TextView camera_button;
     private Button save_claim_starz;
-    private TextInputLayout claimedstarz_desc_text_input;
-    private TextInputLayout claimedstarz_count_text_input;
+
+   private EditText claimedstarz_desc_edit_text;
+    private EditText claimedstarz_count_edit_text;
     private TextView warnText;
     private Uri imagePath;
     private Bitmap image;
@@ -70,8 +72,9 @@ public class ClaimStarzActivity extends AppCompatActivity {
         claimed_starz_edit_ImageView = findViewById(R.id.claimed_starz_edit_ImageView);
         camera_button = findViewById(R.id.camera_button);
         save_claim_starz = findViewById(R.id.save_claim_starz);
-        claimedstarz_desc_text_input = findViewById(R.id.claimedstarz_desc_text_input);
-        claimedstarz_count_text_input = findViewById(R.id.claimedstarz_count_text_input);
+
+        claimedstarz_desc_edit_text = findViewById(R.id.claimedstarz_desc_edit_text);
+        claimedstarz_count_edit_text = findViewById(R.id.claimedstarz_count_edit_text);
         warnText = findViewById(R.id.warn_text);
 
         if (getIntent().getExtras() != null) {
@@ -118,8 +121,8 @@ public class ClaimStarzActivity extends AppCompatActivity {
     }
 
     private void savedClaimedStarz(String s) {
-        String trim = this.claimedstarz_desc_text_input.getEditText().getText().toString().trim();
-        String trim2 = this.claimedstarz_count_text_input.getEditText().getText().toString().trim();
+        String trim = this.claimedstarz_desc_edit_text.getText().toString().trim();
+        String trim2 = this.claimedstarz_count_edit_text.getText().toString().trim();
         if (trim.isEmpty() || trim2.isEmpty()) {
             this.warnText.setText(R.string.some_fields_are_empty);
             this.warnText.setVisibility(View.VISIBLE);
