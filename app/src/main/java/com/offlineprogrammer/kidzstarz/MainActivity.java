@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,12 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.OnFailureListener;
+import com.google.android.play.core.tasks.Task;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.offlineprogrammer.kidzstarz.kid.KidAdapter;
 import com.offlineprogrammer.kidzstarz.kid.OnKidListener;
@@ -41,6 +48,7 @@ import java.util.Random;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity implements OnKidListener {
@@ -55,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     private LinearLayout container;
     private int recentPosition;
     private com.google.android.gms.ads.AdView adView;
+
+    ReviewInfo reviewInfo;
+    ReviewManager manager;
+
 
 
 
@@ -75,15 +87,26 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     }
 
     private void setupAds() {
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        MobileAds.initialize(this, initializationStatus -> {
         });
         adView = findViewById(R.id.ad_view);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
     }
+
+
+    private void Review() {
+        manager = ReviewManagerFactory.create(this);
+        manager.requestReviewFlow().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                reviewInfo = task.getResult();
+                manager.launchReviewFlow(MainActivity.this, reviewInfo).addOnFailureListener(e -> firebaseHelper.logEvent("rating_failed")).addOnCompleteListener(task1 -> firebaseHelper.logEvent("rating_completed"));
+            }
+
+        }).addOnFailureListener(e -> firebaseHelper.logEvent("rating_request_failed"));
+    }
+
+
 
     public void onActivityResult(int i, int i2, @Nullable Intent intent) {
         super.onActivityResult(i, i2, intent);
@@ -93,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
             if (kidzSize >= i4) {
                 this.view_pager.setCurrentItem(i4);
             }
+            Review();
         }
     }
 
@@ -111,11 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     private void setIndicator(int i) {
         int childCount = this.container.getChildCount();
         for (int i2 = 0; i2 < childCount; i2++) {
-            if (i2 == i) {
-                this.container.getChildAt(i2).setSelected(true);
-            } else {
-                this.container.getChildAt(i2).setSelected(false);
-            }
+            this.container.getChildAt(i2).setSelected(i2 == i);
         }
     }
 
@@ -144,15 +164,13 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                Log.d(TAG, "onPageSelected: position " + position);
+                Timber.d("onPageSelected: position %s", position);
                 setIndicator(position);
                 recentPosition = position;
-                if (!(firebaseHelper.kidzStarz.getUser().getKidz().get(position).getKidName() == null)) {
-                    setTitle(position);
-                }
+                setTitle(position);
 
 
-                Log.e("Selected_Page", String.valueOf(position));
+                Timber.e(String.valueOf(position));
             }
 
 
@@ -161,12 +179,9 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
 
     private void configActionButton() {
         Button add_kid = findViewById(R.id.add_kid);
-        add_kid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //throw new RuntimeException("Test Crash"); // Force a crash
-                showAddKidDialog(MainActivity.this);
-            }
+        add_kid.setOnClickListener(view -> {
+            //throw new RuntimeException("Test Crash"); // Force a crash
+            showAddKidDialog(MainActivity.this);
         });
     }
 
@@ -180,53 +195,44 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         kidNameText.requestFocus();
         Button okBtn= dialogView.findViewById(R.id.kidname_save_button);
         Button cancelBtn = dialogView.findViewById(R.id.kidname_cancel_button);
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String kidName = String.valueOf(kidNameText.getEditText().getText());
-                if (!isKidNameValid(kidName)) {
-                    kidNameText.setError(getString(R.string.kid_error_name));
-                } else {
-                    kidNameText.setError(null);
-                    Date currentTime = Calendar.getInstance().getTime();
-                    int monsterImage = pickMonster();
-                    String monsterImageResourceName = getResources().getResourceEntryName(monsterImage);
+        okBtn.setOnClickListener(v -> {
+            String kidName = String.valueOf(kidNameText.getEditText().getText());
+            if (!isKidNameValid(kidName)) {
+                kidNameText.setError(getString(R.string.kid_error_name));
+            } else {
+                kidNameText.setError(null);
+                Date currentTime = Calendar.getInstance().getTime();
+                int monsterImage = pickMonster();
+                String monsterImageResourceName = getResources().getResourceEntryName(monsterImage);
 
-                    Kid newKid = new Kid(kidName,
-                            monsterImageResourceName,
-                            currentTime);
-                    setupProgressBar();
-                    saveKid(newKid);
+                Kid newKid = new Kid(kidName,
+                        monsterImageResourceName,
+                        currentTime);
+                setupProgressBar();
+                saveKid(newKid);
 
-                    //  mFirebaseAnalytics.logEvent("kid_created", null);
-                    builder.dismiss();
-                }
-
-
-            }
-        });
-
-        kidNameText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                String kidName = String.valueOf(kidNameText.getEditText().getText());
-                if (isKidNameValid(kidName)) {
-                    kidNameText.setError(null); //Clear the error
-                }
-                return false;
-            }
-        });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+                //  mFirebaseAnalytics.logEvent("kid_created", null);
                 builder.dismiss();
             }
+
+
         });
+
+        kidNameText.setOnKeyListener((view, i, keyEvent) -> {
+            String kidName = String.valueOf(kidNameText.getEditText().getText());
+            if (isKidNameValid(kidName)) {
+                kidNameText.setError(null); //Clear the error
+            }
+            return false;
+        });
+        cancelBtn.setOnClickListener(v -> builder.dismiss());
         builder.setView(dialogView);
         builder.show();
         builder.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     private void updateViewPager(Kid kid) {
-        Log.i(TAG, "onClick UserFireStore : " + kid.getKidName());
+        Timber.i("onClick UserFireStore : %s", kid.getKidName());
 
         kidAdapter.add(kid, 0);
         setIndicator(firebaseHelper.kidzStarz.getUser().getKidz().size()-1);
@@ -242,27 +248,25 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                 .subscribe(new Observer<Kid>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe");
+                        Timber.d("onSubscribe");
                         disposable = d;
                     }
 
                     @Override
                     public void onNext(Kid kid) {
-                        Log.d(TAG, "onNext: " + kid.getKidName());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                firebaseHelper.logEvent("kid_created");
-                                //updateViewPager(kid);
-                                updateViewPager();
-                                firebaseHelper.updateKidzCollection(kid)
-                                        .subscribe(() -> {
-                                            Log.i(TAG, "updateKidzCollection: completed");
-                                            // handle completion
-                                        }, throwable -> {
-                                            // handle error
-                                        });
-                            }
+                        Timber.d("onNext: %s", kid.getKidName());
+                        runOnUiThread(() -> {
+                            firebaseHelper.logEvent("kid_created");
+                            //updateViewPager(kid);
+                            updateViewPager();
+                            firebaseHelper.updateKidzCollection(kid)
+                                    .subscribe(() -> {
+                                        Timber.i("updateKidzCollection: completed");
+                                        Review();
+                                        // handle completion
+                                    }, throwable -> {
+                                        // handle error
+                                    });
                         });
 
 
@@ -271,12 +275,12 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.getMessage());
+                        Timber.e("onError: %s", e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete");
+                        Timber.d("onComplete");
                     }
                 });
 
@@ -325,8 +329,6 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     public void dismissWithTryCatch(ProgressDialog dialog) {
         try {
             dialog.dismiss();
-        } catch (final IllegalArgumentException e) {
-            // Do nothing.
         } catch (final Exception e) {
             // Do nothing.
         } finally {
@@ -386,20 +388,20 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
 
     @Override
     public void showAddHappyStarzDialog(int position) {
-        Log.i(TAG, "showAddHappyStarzDialog: clicked " + position);
+        Timber.i("showAddHappyStarzDialog: clicked %s", position);
         showAddHappyStarzDialog(MainActivity.this, position);
     }
 
     @Override
     public void showAddSadStarzDialog(int position) {
-        Log.i(TAG, "showAddSadStarzDialog: clicked " + position);
+        Timber.i("showAddSadStarzDialog: clicked %s", position);
         showAddSadStarzDialog(MainActivity.this, position);
 
     }
 
     @Override
     public void deleteKid(int position) {
-        Log.i(TAG, "deleteKid: Clicked " + position);
+        Timber.i("deleteKid: Clicked %s", position);
         Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
         final AlertDialog builder = new AlertDialog.Builder(MainActivity.this).create();
         LayoutInflater inflater = getLayoutInflater();
@@ -407,18 +409,12 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         Button okBtn = dialogView.findViewById(R.id.deletekid_confirm_button);
         Button cancelBtn = dialogView.findViewById(R.id.deletekid_cancel_button);
 
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                builder.dismiss();
-                deleteKid(selectedKid);
-                // mFirebaseAnalytics.logEvent("kid_deleted", null);
-            }
+        okBtn.setOnClickListener(v -> {
+            builder.dismiss();
+            deleteKid(selectedKid);
+            // mFirebaseAnalytics.logEvent("kid_deleted", null);
         });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                builder.dismiss();
-            }
-        });
+        cancelBtn.setOnClickListener(v -> builder.dismiss());
         builder.setView(dialogView);
         builder.show();
     }
@@ -426,12 +422,10 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     private void deleteKid(Kid theSelectedKid) {
         firebaseHelper.deleteKid(theSelectedKid)
                 .subscribe(() -> {
-                    Log.i(TAG, "updateRewardImage: completed");
+                    Timber.i("updateRewardImage: completed");
                     firebaseHelper.logEvent("kid_deleted");
                     firebaseHelper.deleteKidStarzCollection(theSelectedKid)
-                            .subscribe(() -> {
-                                finish();
-                            }, throwable -> {
+                            .subscribe(this::finish, throwable -> {
                                 // handle error
                             });
 
@@ -442,12 +436,11 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
 
     @Override
     public void showMoreInfo(int position) {
-        Log.i(TAG, "showMoreInfo: Clicked " + position);
+        Timber.i("showMoreInfo: Clicked %s", position);
         Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra("selected_kid", selectedKid);
-        int currentItem = this.view_pager.getCurrentItem();
-        this.recentPosition = currentItem;
+        this.recentPosition = this.view_pager.getCurrentItem();
         startActivityForResult(intent, 500);
         // startActivity(intent);
     }
@@ -462,36 +455,32 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         HappyStarDescText.requestFocus();
         Button okBtn = dialogView.findViewById(R.id.happystar_save_button);
         Button cancelBtn = dialogView.findViewById(R.id.happystar_cancel_button);
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String happyStarDesc = String.valueOf(HappyStarDescText.getEditText().getText());
-                String happyStarCount = String.valueOf(HappyStarCountText.getEditText().getText());
-                if (!isDescValid(happyStarDesc)) {
-                    HappyStarDescText.setError(c.getString(R.string.star_desc_error));
-                } else if (!isCountValid(happyStarCount, firebaseHelper.kidzStarz.getUser().getKidz().get(position), Constants.SAD)) {
-                    HappyStarCountText.setError(c.getString(R.string.star_count_error));
-                } else {
-                    HappyStarDescText.setError(null);
-                    Date currentTime = Calendar.getInstance().getTime();
-                    Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
-                    Starz happyStarz = new Starz(selectedKid.getKidUUID(), happyStarDesc, Integer.valueOf(happyStarCount.trim()).intValue(), Constants.HAPPY);
-                    setupProgressBar();
-                    saveStarz(happyStarz, position);
+        okBtn.setOnClickListener(v -> {
+            String happyStarDesc = String.valueOf(HappyStarDescText.getEditText().getText());
+            String happyStarCount = String.valueOf(HappyStarCountText.getEditText().getText());
+            if (!isDescValid(happyStarDesc)) {
+                HappyStarDescText.setError(c.getString(R.string.star_desc_error));
+            } else if (!isCountValid(happyStarCount, firebaseHelper.kidzStarz.getUser().getKidz().get(position), Constants.SAD)) {
+                HappyStarCountText.setError(c.getString(R.string.star_count_error));
+            } else {
+                HappyStarDescText.setError(null);
+                Date currentTime = Calendar.getInstance().getTime();
+                Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
+                Starz happyStarz = new Starz(selectedKid.getKidUUID(), happyStarDesc, Integer.valueOf(happyStarCount.trim()), Constants.HAPPY);
+                setupProgressBar();
+                saveStarz(happyStarz, position);
 
-                    builder.dismiss();
-                }
-
-
+                builder.dismiss();
             }
+
+
         });
 
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                builder.dismiss();
+        cancelBtn.setOnClickListener(v -> {
+            builder.dismiss();
 
-                // btnAdd1 has been clicked
+            // btnAdd1 has been clicked
 
-            }
         });
         builder.setView(dialogView);
         builder.show();
@@ -506,13 +495,13 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                 .subscribe(new Observer<Starz>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe");
+                        Timber.d("onSubscribe");
                         disposable = d;
                     }
 
                     @Override
                     public void onNext(Starz createdStarz) {
-                        Log.d(TAG, "onNext: " + createdStarz.getCount());
+                        Timber.d("onNext: %s", createdStarz.getCount());
                         firebaseHelper.logEvent("starz_created_" + createdStarz.getType());
                         //dismissProgressBar();
                         updateKidStarz(createdStarz, position);
@@ -522,12 +511,12 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.getMessage());
+                        Timber.e("onError: %s", e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete");
+                        Timber.d("onComplete");
                     }
                 });
 
@@ -536,9 +525,10 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     private void updateKidStarz(Starz createdStarz, int position) {
         firebaseHelper.updateKidStarz(createdStarz, position)
                 .subscribe(() -> {
-                    Log.i(TAG, "updateKidzCollection: completed");
+                    Timber.i("updateKidzCollection: completed");
                     updateViewPager();
                     dismissProgressBar();
+                    Review();
                 }, throwable -> {
                     // handle error
                 });
@@ -553,36 +543,32 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         sadStarDescText.requestFocus();
         Button okBtn = dialogView.findViewById(R.id.sadstar_save_button);
         Button cancelBtn = dialogView.findViewById(R.id.sadstar_cancel_button);
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String sadStarDesc = String.valueOf(sadStarDescText.getEditText().getText());
-                String sadStarCount = String.valueOf(sadStarCountText.getEditText().getText());
-                if (!isDescValid(sadStarDesc)) {
-                    sadStarDescText.setError(c.getString(R.string.star_desc_error));
-                } else if (!isCountValid(sadStarCount, firebaseHelper.kidzStarz.getUser().getKidz().get(position), Constants.SAD)) {
-                    sadStarCountText.setError(c.getString(R.string.star_count_error));
-                } else {
-                    sadStarDescText.setError(null);
-                    Date currentTime = Calendar.getInstance().getTime();
-                    Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
-                    Starz sadStarz = new Starz(selectedKid.getKidUUID(), sadStarDesc, Integer.valueOf(sadStarCount.trim()).intValue(), Constants.SAD);
-                    setupProgressBar();
-                    saveStarz(sadStarz, position);
+        okBtn.setOnClickListener(v -> {
+            String sadStarDesc = String.valueOf(sadStarDescText.getEditText().getText());
+            String sadStarCount = String.valueOf(sadStarCountText.getEditText().getText());
+            if (!isDescValid(sadStarDesc)) {
+                sadStarDescText.setError(c.getString(R.string.star_desc_error));
+            } else if (!isCountValid(sadStarCount, firebaseHelper.kidzStarz.getUser().getKidz().get(position), Constants.SAD)) {
+                sadStarCountText.setError(c.getString(R.string.star_count_error));
+            } else {
+                sadStarDescText.setError(null);
+                Date currentTime = Calendar.getInstance().getTime();
+                Kid selectedKid = firebaseHelper.kidzStarz.getUser().getKidz().get(position);
+                Starz sadStarz = new Starz(selectedKid.getKidUUID(), sadStarDesc, Integer.valueOf(sadStarCount.trim()), Constants.SAD);
+                setupProgressBar();
+                saveStarz(sadStarz, position);
 
-                    builder.dismiss();
-                }
-
-
+                builder.dismiss();
             }
+
+
         });
 
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                builder.dismiss();
+        cancelBtn.setOnClickListener(v -> {
+            builder.dismiss();
 
-                // btnAdd1 has been clicked
+            // btnAdd1 has been clicked
 
-            }
         });
         builder.setView(dialogView);
         builder.show();

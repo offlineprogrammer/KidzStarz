@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -30,6 +31,12 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.OnFailureListener;
+import com.google.android.play.core.tasks.Task;
 import com.offlineprogrammer.kidzstarz.kid.Kid;
 import com.offlineprogrammer.kidzstarz.starz.OnStarzListener;
 import com.offlineprogrammer.kidzstarz.starz.Starz;
@@ -62,6 +69,9 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
     private Fragment currentFragment;
     ProgressDialog progressBar;
 
+    ReviewInfo reviewInfo;
+    ReviewManager manager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +102,19 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         setupAds();
 
     }
+
+
+    private void Review() {
+        manager = ReviewManagerFactory.create(this);
+        manager.requestReviewFlow().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                reviewInfo = task.getResult();
+                manager.launchReviewFlow(DetailsActivity.this, reviewInfo).addOnFailureListener(e -> firebaseHelper.logEvent("rating_failed")).addOnCompleteListener(task1 -> firebaseHelper.logEvent("rating_completed"));
+            }
+
+        }).addOnFailureListener(e -> firebaseHelper.logEvent("rating_request_failed"));
+    }
+
 
     private void setupProgressBar() {
         dismissProgressBar();
@@ -193,8 +216,10 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
         Fragment fragment = this.currentFragment;
         if (fragment instanceof ClaimFragment) {
             this.setTitle(selectedKid.getKidName());
+            Review();
           //  return;
         } else if (fragment instanceof ShareFragment) {
+
 
             setResult(0, new Intent());
             finish();
@@ -314,6 +339,7 @@ public class DetailsActivity extends AppCompatActivity implements OnStarzListene
                     @Override
                     public void onComplete() {
                         Timber.d("onComplete");
+                        dismissProgressBar();
                     }
                 });
 
