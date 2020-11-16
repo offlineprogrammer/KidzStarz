@@ -32,7 +32,7 @@
     <string name="ksz_starz_list">Starz List</string>
     <string name="ksz_claim_starz">Claim Starz</string>
     <string name="ksz_enter_starz_being_claimed">How many starz?</string>
-    <string name="ksz_hint_claimedstarz_count">Claimed Starz Count</string>
+    <string name="ksz_hint_claimedstarz_count">Starz Count</string>
     <string name="capture_this_moment">Capture this moment</string>
     <string name="ksz_hint_claimedstarz_desc">Tell us about it</string>
     <string name="ksz_button_claim">Claim</string>

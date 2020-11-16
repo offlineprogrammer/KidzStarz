@@ -111,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
     public void onActivityResult(int i, int i2, @Nullable Intent intent) {
         super.onActivityResult(i, i2, intent);
         if (i == 500) {
+
+            updateViewPager();
             int kidzSize = firebaseHelper.kidzStarz.getUser().getKidz().size() - 1;
             int i4 = this.recentPosition;
             if (kidzSize >= i4) {
@@ -149,6 +151,9 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
         kidAdapter = new KidAdapter(firebaseHelper.kidzStarz.getUser().getKidz(), this);
         view_pager = findViewById(R.id.view_pager);
         view_pager.setAdapter(kidAdapter);
+        populateIndicator();
+        setIndicator(0);
+
         dismissProgressBar();
 
     }
@@ -262,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                             firebaseHelper.updateKidzCollection(kid)
                                     .subscribe(() -> {
                                         Timber.i("updateKidzCollection: completed");
+                                        updateViewPager();
                                         Review();
                                         // handle completion
                                     }, throwable -> {
@@ -426,7 +432,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                     firebaseHelper.logEvent("kid_deleted");
                     firebaseHelper.deleteKidStarzCollection(theSelectedKid)
                             .subscribe(this::finish, throwable -> {
-                                // handle error
+                                updateViewPager();
                             });
 
                 }, throwable -> {
