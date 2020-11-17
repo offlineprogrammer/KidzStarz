@@ -438,6 +438,7 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                 }, throwable -> {
                     // handle error
                 });
+
     }
 
     @Override
