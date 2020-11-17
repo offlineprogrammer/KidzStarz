@@ -381,28 +381,21 @@ public class FirebaseHelper {
         });
     }
 
+
     public Completable deleteKid(Kid selectedKid) {
         return Completable.create(emitter -> {
             kidzStarz.getUser().getKidz().remove(selectedKid);
             DocumentReference newKidRef = m_db.collection("users").document(kidzStarz.getUser().getUserId());//.collection("kidz").document();
             newKidRef.update("kidz", kidzStarz.getUser().getKidz())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.i(TAG, "DocumentSnapshot successfully deleted!");
+                    .addOnSuccessListener(aVoid -> {
+                        Timber.i("DocumentSnapshot successfully deleted!");
 
-                            emitter.onComplete();
-                        }
+                        emitter.onComplete();
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.i(TAG, "Error updating document", e);
-                            emitter.onError(e);
-                        }
+                    .addOnFailureListener(e -> {
+                        Timber.i(e, "Error updating document");
+                        emitter.onError(e);
                     });
-
-
         });
     }
 

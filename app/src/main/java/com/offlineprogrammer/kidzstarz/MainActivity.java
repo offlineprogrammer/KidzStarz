@@ -431,8 +431,8 @@ public class MainActivity extends AppCompatActivity implements OnKidListener {
                     Timber.i("updateRewardImage: completed");
                     firebaseHelper.logEvent("kid_deleted");
                     firebaseHelper.deleteKidStarzCollection(theSelectedKid)
-                            .subscribe(this::finish, throwable -> {
-                                updateViewPager();
+                            .subscribe(this::updateViewPager, throwable -> {
+
                             });
 
                 }, throwable -> {
